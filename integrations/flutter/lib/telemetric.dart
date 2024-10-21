@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'platform.dart';
+import '../platform.dart';
 
 /// The Telemetric class provides methods to track events and revenue.
 class Telemetric {
@@ -77,7 +77,7 @@ class Telemetric {
     }
   }
 
-  /// Tracks revenue with an [amount]
+  /// Tracks revenue with an [amount]s
   static Future<void> revenue(double amount) async {
     if (!safetyCheck('Revenue')) return;
     if (kDebugMode) return;
@@ -166,7 +166,7 @@ class Telemetric {
     return _userID;
   }
 
-  static String _getOS() {
+  static String? _getOS() {
     return PlatformUtils.getOS();
   }
 }

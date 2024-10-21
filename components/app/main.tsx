@@ -1,20 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { Project, Revenue, SelectedNavItem } from "@/types/index";
+import { Project } from "@/types/index";
 
 import Metrics from "./metrics/metrics/metrics";
 
 import { createClient } from "@/utils/supabase/client";
 import { Navbar } from "./navigation/navbar/navbar";
 
-import Projects from "./navigation/navitems/projectslist/projectslist";
-
 export function Dashboard() {
   const supabase = createClient();
-  const [selectedNavItem, setSelectedNavItem] = useState<SelectedNavItem>(
-    SelectedNavItem.PROJECTS
-  );
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -79,12 +74,12 @@ export function Dashboard() {
       };
 
       setSelectedProject(updatedProject);
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchProjects = async () => {
+      setLoading(true);
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
 
@@ -129,6 +124,7 @@ export function Dashboard() {
             fetchedProjects.push(projectData);
           }
         }
+        // Set the selected project to the first one if there are fetched projects
 
         // Store fetched projects in local storage
         localStorage.setItem(
@@ -137,56 +133,24 @@ export function Dashboard() {
         );
 
         setProjects((prevProjects) => [...prevProjects, ...fetchedProjects]);
+        handleTimeRangeSelect("7days");
+        setLoading(false);
+        if (fetchedProjects.length > 0) {
+          setSelectedProject(fetchedProjects[0]);
+        } else if (projectsFromStorage.length > 0) {
+          // If no new projects were fetched, set the first project from storage
+          setSelectedProject(projectsFromStorage[0]);
+        }
       }
     };
 
-    // Load projects from local storage if they exist
-    const storedProjects = localStorage.getItem("projects");
-    if (storedProjects) {
-      const projectsFromStorage = JSON.parse(storedProjects);
-      setProjects(projectsFromStorage);
-    } else {
-      fetchProjects();
-    }
+    fetchProjects();
   }, []);
-
-  const handleNavItemClick = (navItem: SelectedNavItem) => {
-    setSelectedNavItem(navItem);
-  };
 
   const handleProjectChange = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);
-    setSelectedNavItem(SelectedNavItem.METRICS);
   };
-
-  function renderContent() {
-    switch (selectedNavItem) {
-      case SelectedNavItem.PROJECTS:
-        return (
-          <div className="flex justify-center items-center">
-            <Projects
-              onProjectSelect={handleProjectChange}
-              projects={projects}
-            />
-          </div>
-        );
-      case SelectedNavItem.METRICS:
-        return (
-          <Metrics
-            selectedProject={selectedProject!}
-            projects={projects}
-            selectedTimeRange={timeRange}
-            loading={loading}
-          />
-        );
-      case SelectedNavItem.ACCOUNT:
-        return <div>Account</div>;
-
-      default:
-        return null;
-    }
-  }
 
   if (error) return <div>Error: {error}</div>;
 
@@ -207,10 +171,8 @@ export function Dashboard() {
       <Navbar
         selectedProject={selectedProject!}
         projects={projects}
-        hasLoaded={true}
+        loading={loading}
         onProjectChange={handleProjectChange}
-        onDestinationSelected={handleNavItemClick}
-        selectedIndex={selectedNavItem}
         handleTimeRangeSelect={handleTimeRangeSelect}
       />
 
@@ -222,7 +184,12 @@ export function Dashboard() {
           minHeight: "100vh",
         }}
       >
-        {renderContent()}
+        <Metrics
+          selectedProject={selectedProject!}
+          projects={projects}
+          selectedTimeRange={timeRange}
+          loading={loading}
+        />
       </main>
     </div>
   );

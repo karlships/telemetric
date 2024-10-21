@@ -7,7 +7,7 @@ import { DatePickerWithPresetsAndRange } from "./test";
 
 interface HeaderProps {
   projects: Project[];
-  hasLoaded: boolean;
+  loading: boolean;
   onProjectChange: (value: string) => void;
   handleTimeRangeSelect: (
     range: string,
@@ -15,17 +15,14 @@ interface HeaderProps {
     endDate?: Date
   ) => void;
   selectedProject: Project;
-  onDestinationSelected: (navItem: SelectedNavItem) => void; // Change type to SelectedNavItem
-  selectedIndex: SelectedNavItem; // Change type to SelectedNavItem
 }
 
 export function Navbar({
   selectedProject,
-  onDestinationSelected,
-  selectedIndex,
+
   projects,
   onProjectChange,
-  hasLoaded,
+loading,
   handleTimeRangeSelect,
 }: HeaderProps) {
   // Check if the selected project has a metadata type of 'app'
@@ -37,12 +34,12 @@ export function Navbar({
         projects={projects}
         selectedProject={selectedProject!}
         onProjectChange={onProjectChange}
-        hasLoaded={hasLoaded}
-      />  
+        loading={loading}
+      />
 
-    
+
       <TimeRangeSelector onSelect={handleTimeRangeSelect} />
-      <DatePickerWithPresetsAndRange onSelect={() => {}} /> 
+
     </header>
   );
 }

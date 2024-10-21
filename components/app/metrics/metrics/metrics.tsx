@@ -33,6 +33,8 @@ const Metrics: React.FC<MetricsProps> = ({
   const [eventsData, setEventsData] = useState<Event[]>([]);
   const [currentSelectTabIndex, setCurrentSelectTabIndex] = useState<number>(0);
 
+
+
   useEffect(() => {
     if (selectedProject) {
       const uniqueUserSet = new Set();
@@ -159,21 +161,16 @@ const Metrics: React.FC<MetricsProps> = ({
         )}
 
         <div className="metrics-container-item">
-          <OperatingSystemCard activities={osData} />
-          {selectedProject.type === "website" && (
-            <BrowsersCard activities={browserData} />
-          )}
+            <OperatingSystemCard activities={osData} />
+        
+
         </div>
         <div style={{ width: "fill", maxWidth: "100%" }}>
           <LocationsCard locationsPassed={locationData} />
         </div>
 
-        <div className="metrics-container-item-2">
-          {selectedProject.type === "website" && (
-            <>
-              <ReferrersCard referrers={referrerData} />
-            </>
-          )}
+          <div className="metrics-container-item-2">
+
           <VersionsCard versions={versionData} />
         </div>
       </div>

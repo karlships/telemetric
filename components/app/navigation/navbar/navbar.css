@@ -3,7 +3,7 @@
   flex-direction: row;
   align-items: start;
   justify-content: start;
-  margin-top: 100px;
+  margin-top: 10px;
   align-self: center;
   flex: 1;
   position: sticky;
@@ -13,14 +13,19 @@
   width: 80%;
   max-width: 80%;
   background-color: var(--dominant);
- 
 
-  padding: 8px;
+
+  padding-bottom: 0px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   height: 100%;
 }
 
 @media screen and (max-width: 400px) {
   .navbar {
+    width: 100%;
+    max-width: 100%;
     flex-direction: column;
     height: auto;
     padding: 12px;

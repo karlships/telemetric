@@ -15,7 +15,7 @@ OR add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  telemetric: ^0.0.7
+  telemetric: ^1.0.0
 ```
 
 ### Usage

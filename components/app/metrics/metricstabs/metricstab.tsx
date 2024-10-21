@@ -54,10 +54,10 @@ const Tabs: React.FC<TabsProps> = ({
               }}
             >
               {loading ? (
-                <Skeleton
-                  color="var(--subtitle)"
-            
-                />
+                <div className="flex items-center space-x-4">
+                  <Skeleton className="h-10 w-20 " />
+
+                </div>
               ) : (
                 tab.count
               )}
