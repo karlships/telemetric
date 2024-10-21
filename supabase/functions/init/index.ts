@@ -26,7 +26,7 @@ async function handleRequest(req: Request): Promise<Response> {
     const requestBody = await req.json();
     const {
       projectID,
-      initial,
+
       referrer,
       os,
       version,
