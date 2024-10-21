@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+
 import Image from "next/image";
 import React from "react";
 
@@ -74,6 +74,7 @@ const BrowsersCard = ({ activities }: { activities: string[] }) => {
           style={{
             color: "var(--subtitle)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Users & Percentage
@@ -105,10 +106,7 @@ const BrowsersCard = ({ activities }: { activities: string[] }) => {
           </div>
         ) : (
           browserUsage.map((browser) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: browserUsage.indexOf(browser) * 0.1 }}
+            <div
               key={browser.browser}
               style={{
                 display: "flex",
@@ -149,7 +147,7 @@ const BrowsersCard = ({ activities }: { activities: string[] }) => {
                 {browser.count} ({browser.percentage}%){" "}
                 {/* Display count and percentage */}
               </p>
-            </motion.div>
+            </div>
           ))
         )}
       </div>

@@ -6,6 +6,7 @@ import { Project } from "@/types/index";
 import Metrics from "./metrics/metrics/metrics";
 
 import { createClient } from "@/utils/supabase/client";
+import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
 import { Navbar } from "./navigation/navbar/navbar";
 
 export function Dashboard() {
@@ -17,7 +18,7 @@ export function Dashboard() {
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [timeRange, setTimeRange] = useState<string>("");
+  const [timeRange, setTimeRange] = useState<string>("last7days");
 
   const handleTimeRangeSelect = async (
     range: string,
@@ -25,127 +26,90 @@ export function Dashboard() {
     endDate?: Date
   ) => {
     setTimeRange(range);
-    setLoading(true);
-    setError(null);
-    if (selectedProject) {
-      // Fetch activities, revenue, and events every time
-      const { data: activitiesData, error: activitiesError } = await supabase
-        .from("activities")
-        .select("*")
-        .eq("project_id", selectedProject.id)
-        .gte(
-          "timestamp",
-          startDate?.toISOString() ||
-            new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-        )
-        .lte("timestamp", endDate?.toISOString() || new Date().toISOString());
-
-      const { data: revenueData, error: revenueError } = await supabase
-        .from("revenue")
-        .select("*")
-        .eq("project_id", selectedProject.id)
-        .gte(
-          "timestamp",
-          startDate?.toISOString() ||
-            new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-        )
-        .lte("timestamp", endDate?.toISOString() || new Date().toISOString());
-
-      const { data: eventsData, error: eventsError } = await supabase
-        .from("events")
-        .select("*")
-        .eq("project_id", selectedProject.id)
-        .gte(
-          "timestamp",
-          startDate?.toISOString() ||
-            new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-        )
-        .lte("timestamp", endDate?.toISOString() || new Date().toISOString());
-
-      if (activitiesError) setError(activitiesError.message);
-      if (revenueError) setError(revenueError.message);
-      if (eventsError) setError(eventsError.message);
-
-      const updatedProject = {
-        ...selectedProject,
-        activities: activitiesData || [],
-        revenue: revenueData || [],
-        events: eventsData || [],
-      };
-
-      setSelectedProject(updatedProject);
-    }
   };
+
+  let hasFetchedProjcets = false;
 
   useEffect(() => {
     const fetchProjects = async () => {
+      if (hasFetchedProjcets) return;
+      hasFetchedProjcets = true;
       setLoading(true);
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
 
-      const { data, error } = await supabase
-        .from("customers")
-        .select("projects")
-        .eq("id", userData?.user?.id)
-        .single();
+      // Check if projects exist in local storage
+      const storedProjects = localStorage.getItem("projects");
 
-      if (error) {
-        setError(error.message);
-      } else {
-        const fetchedProjects: Project[] = [];
-
-        // Check if projects are already in local storage
-        const storedProjects = localStorage.getItem("projects");
-        const projectsFromStorage = storedProjects
-          ? JSON.parse(storedProjects)
-          : [];
-
-        for (const projectID of data.projects) {
-          // Check if the project ID already exists in the storage or state
-          if (
-            projectsFromStorage.find(
-              (project: Project) => project.id === projectID
-            ) ||
-            projects.find((project) => project.id === projectID)
-          ) {
-            continue; // Skip to the next iteration if the ID already exists
-          }
-
-          // Fetch project data
-          const { data: projectData, error: projectError } = await supabase
-            .from("projects")
-            .select("*")
-            .eq("id", projectID)
-            .single();
-
-          if (projectError) {
-            setError(projectError.message);
-          } else if (projectData) {
-            fetchedProjects.push(projectData);
+      if (storedProjects) {
+        const parsedProjects = JSON.parse(storedProjects);
+        console.log(parsedProjects);
+        for (const project of parsedProjects) {
+          if (!projects.some((p) => p.id === project.id)) {
+            fetchProjectData(project.id);
           }
         }
-        // Set the selected project to the first one if there are fetched projects
-
-        // Store fetched projects in local storage
-        localStorage.setItem(
-          "projects",
-          JSON.stringify([...projectsFromStorage, ...fetchedProjects])
-        );
-
-        setProjects((prevProjects) => [...prevProjects, ...fetchedProjects]);
-        handleTimeRangeSelect("7days");
         setLoading(false);
-        if (fetchedProjects.length > 0) {
-          setSelectedProject(fetchedProjects[0]);
-        } else if (projectsFromStorage.length > 0) {
-          // If no new projects were fetched, set the first project from storage
-          setSelectedProject(projectsFromStorage[0]);
+      } else {
+        const { data, error } = await supabase
+          .from("customers")
+          .select("projects")
+          .eq("id", userData?.user?.id)
+          .single();
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+          return;
         }
+
+        // Store projects in local storage
+        localStorage.setItem("projects", JSON.stringify(data?.projects));
+        for (const project of data?.projects) {
+          if (!projects.some((p) => p.id === project)) {
+            fetchProjectData(project);
+          }
+        }
+        setLoading(false);
       }
     };
 
     fetchProjects();
   }, []);
+
+  const fetchProjectData = async (project: Project) => {
+    if (project) {
+      const { data: projectData, error: projectError } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", project);
+      const { data: activitiesData, error: activitiesError } = await supabase
+        .from("activities")
+        .select("*")
+        .eq("project_id", project);
+
+      const { data: revenueData, error: revenueError } = await supabase
+        .from("revenue")
+        .select("*")
+        .eq("project_id", project);
+      const { data: eventsData, error: eventsError } = await supabase
+        .from("events")
+        .select("*")
+        .eq("project_id", project);
+      if (activitiesError) setError(activitiesError.message);
+      if (revenueError) setError(revenueError.message);
+      if (eventsError) setError(eventsError.message);
+      if (projectData && projectData.length > 0) {
+        const newProject = {
+          ...projectData[0],
+          activities: activitiesData || [],
+          revenue: revenueData || [],
+          events: eventsData || [],
+        };
+
+        setProjects((prevProjects) => [...prevProjects, newProject]);
+      }
+    }
+  };
 
   const handleProjectChange = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId) || null;
@@ -153,6 +117,12 @@ export function Dashboard() {
   };
 
   if (error) return <div>Error: {error}</div>;
+
+  useEffect(() => {
+    setSelectedProject(projects[0]);
+
+    console.log(projects); // This will log the updated projects after state change
+  }, [projects]); // Dependency array to trigger effect when projects change
 
   return (
     <div
@@ -191,6 +161,10 @@ export function Dashboard() {
           loading={loading}
         />
       </main>
+      <BottomNavbar
+        loading={loading}
+        handleTimeRangeSelect={handleTimeRangeSelect}
+      />
     </div>
   );
 }

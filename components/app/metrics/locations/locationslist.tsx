@@ -1,6 +1,5 @@
 // Mapping of country names to country code
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -38,9 +37,7 @@ const LocationsList = ({
           const countryCode = countryCodes ? countryCodes[location] : undefined;
 
           return (
-            <motion.a
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+            <a
               href={`https://www.google.com/maps/place/${encodeURIComponent(
                 location
               )}`}
@@ -51,7 +48,7 @@ const LocationsList = ({
                 textDecoration: "none",
                 display: "flex",
                 alignItems: "center",
-            
+
                 background: `linear-gradient(to right, var(--dominant) ${(
                   (locationCounts[location] / locations.length) *
                   100
@@ -88,21 +85,20 @@ const LocationsList = ({
                 )}
                 %) {/* Display count and percentage */}
               </p>
-            </motion.a>
+            </a>
           );
         })
       ) : (
         <div
-        style={{
-          color: "var(--subtitle)",
-          padding: "10px",
-          fontSize: "12px",
-          textAlign: "center",
-          
-        }}
-      >
-        No data. Yet.
-      </div> // Fallback message
+          style={{
+            color: "var(--subtitle)",
+            padding: "10px",
+            fontSize: "12px",
+            textAlign: "center",
+          }}
+        >
+          No data. Yet.
+        </div> // Fallback message
       )}
     </div>
   );

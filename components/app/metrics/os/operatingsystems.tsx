@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -74,6 +73,7 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
           style={{
             color: "var(--subtitle)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Users & Percentage
@@ -101,10 +101,7 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
           </div>
         ) : (
           osUsage.map((os) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: osUsage.indexOf(os) * 0.1 }}
+            <div
               key={os.os}
               style={{
                 display: "flex",
@@ -159,7 +156,7 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
                 {os.count} ({os.percentage}%){" "}
                 {/* Display count and percentage */}
               </p>
-            </motion.div>
+            </div>
           ))
         )}
       </div>

@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { Project } from "@/types";
 import Image from "next/image";
 import * as React from "react";
@@ -55,33 +54,48 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
     }
   }, [projects]);
 
+  // Add a check for selectedProject
+
   return (
     <Select
       onValueChange={onProjectChange}
-      value={loading ? selectedProject.id : ""}
+      value={
+        !loading && selectedProject && selectedProject.id !== undefined
+          ? selectedProject.id
+          : ""
+      }
     >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a project" />
+        <SelectValue
+          placeholder={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <Image
+                src={"/images/logo.png"}
+                width={15}
+                height={15}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  borderRadius: "50%",
+                }}
+                alt={"Loading..."} // Added alt attribute for accessibility
+              />{" "}
+              Loading...
+            </div>
+          }
+        ></SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Projects</SelectLabel>
-          {loading ? (
-            <SelectItem key={"selectedProject.id"} value={"selectedProject.id"}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
-                <Spinner size="sm" />
-                Loading...
-              </div>
-            </SelectItem>
-          ) : (
-            projects.map((project) => (
-              <SelectItem key={project.id} value={project.id}>
+          {projects.map((project) => (
+            <SelectItem key={project.id} value={project.id}>
               <div
                 style={{
                   display: "flex",
@@ -90,7 +104,7 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
                 }}
               >
                 <Image
-                  src={appIcons[project.id]}
+                  src={appIcons[project.id] || ""}
                   width={15}
                   height={15}
                   style={{
@@ -100,11 +114,10 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
                   }}
                   alt={project.name} // Added alt attribute for accessibility
                 />{" "}
-                  {project.name}
-                  </div>
-              </SelectItem>
-            ))
-          )}
+                {project.name}
+              </div>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

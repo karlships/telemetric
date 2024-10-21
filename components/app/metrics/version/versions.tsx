@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import React from "react";
 
 interface VersionUsage {
@@ -73,6 +72,7 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
           style={{
             color: "var(--subtitle)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Users & Percentage
@@ -99,7 +99,7 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
         </div>
       ) : (
         versionUsage.map((version) => (
-          <motion.div
+          <div
             key={version.version} // Add the key prop here
             style={{
               display: "flex",
@@ -115,9 +115,7 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
               padding: "10px",
               borderRadius: "0px",
             }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: versionUsage.indexOf(version) * 0.01 }}
+       
           >
             <p
               style={{
@@ -135,7 +133,7 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
               {version.count} ({version.percentage}%){" "}
               {/* Display count and percentage */}
             </p>
-          </motion.div>
+          </div>
         ))
       )}
     </div>

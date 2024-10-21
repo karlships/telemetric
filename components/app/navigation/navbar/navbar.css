@@ -1,34 +1,41 @@
 .navbar {
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: center;
   justify-content: start;
   margin-top: 10px;
   align-self: center;
   flex: 1;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10;
   gap: 20px;
   width: 80%;
   max-width: 80%;
   background-color: var(--dominant);
 
-
-  padding-bottom: 0px;
+  padding-bottom: 10px;
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  height: 100%;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (min-width: 601px) {
+  .timerange-selector {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
   .navbar {
     width: 100%;
     max-width: 100%;
-    flex-direction: column;
+
     height: auto;
     padding: 12px;
+  }
+  .timerange-selector {
+    display: none;
   }
 
   .navbar > * {

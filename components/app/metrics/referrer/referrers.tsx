@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
 
@@ -67,6 +66,7 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
           style={{
             color: "var(--secondary)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Referrers
@@ -95,18 +95,15 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
               padding: "10px",
               fontSize: "12px",
               textAlign: "center",
-        
             }}
           >
             No data. Yet.
           </div>
         ) : (
           referrerUsage.map((referrer) => (
-            <motion.a
+            <a
               key={referrer.referrer} // Add the key prop here
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: referrerUsage.indexOf(referrer) * 0.01 }}
+             
               href={
                 referrer.referrer !== "Unknown"
                   ? `${referrer.referrer}`
@@ -166,7 +163,7 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
                   {/* Display count and percentage */}
                 </p>
               </div>
-            </motion.a>
+            </a>
           ))
         )}
       </div>

@@ -19,7 +19,7 @@ export interface Location {
 
 export interface Activity {
   id: string;
-  initial: boolean;
+  user_id: string;
   referrer: string;
   timestamp: string;
   project_id: string;
@@ -71,4 +71,5 @@ export enum DataType {
   USERS = "users",
   REVENUE = "revenue",
   EVENTS = "events",
+  SESSIONS = "sessions",
 }

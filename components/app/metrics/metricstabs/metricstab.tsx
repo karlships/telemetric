@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import Chart from "../charts/chart";
 import { DataType } from "@/types/index";
+import Chart from "../charts/chart";
 import "./metricstab.css";
 interface Tab {
   label: string;
@@ -47,21 +47,20 @@ const Tabs: React.FC<TabsProps> = ({
             }}
           >
             {tab.label}
-            <p
-              style={{
-                fontSize: "35px",
-                fontWeight: "600",
-              }}
-            >
-              {loading ? (
-                <div className="flex items-center space-x-4">
-                  <Skeleton className="h-10 w-20 " />
-
-                </div>
-              ) : (
-                tab.count
-              )}
-            </p>
+            {loading ? (
+              <div className="flex items-center space-x-4">
+                <Skeleton className="h-10 w-20 " />
+              </div>
+            ) : (
+              <p
+                style={{
+                  fontSize: "35px",
+                  fontWeight: "600",
+                }}
+              >
+                {tab.count}
+              </p>
+            )}
           </button>
         ))}
       </div>
