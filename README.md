@@ -1,3 +1,3 @@
-Welcome to Telemetric!
+Analytics tool with support for Flutter and the Web. 
 
-Please submit feedback/issues or help on X: 
+Discontinued but can be used as starting point for your own analytics tool.
