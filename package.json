@@ -47,7 +47,6 @@
     "date-fns": "^3.6.0",
     "deno": "^0.1.1",
     "embla-carousel-react": "^8.3.0",
-    "framer-motion": "^11.5.4",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.453.0",
     "next": "^14.2.15",

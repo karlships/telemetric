@@ -1,13 +1,10 @@
 "use client";
 
 import Button from "@/components/ui/button/button";
-import Input from "@/components/ui/input/input";
 import "@/components/ui/input/input.css"; // Import your CSS file
 import { createClient } from "@/utils/supabase/client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import OTPInput from "react-otp-input";
 
 const Message = ({
   message,
@@ -172,131 +169,31 @@ const LoginPage = () => {
                 : "Welcome! Enter your email and we'll send you a code to login."}
             </p>
           </div>
-          {isCodeSent ? (
-            <form>
-              <OTPInput
-                renderInput={(props: any, index: any) => (
-                  <input
-                    {...props}
-                    className="input"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      textAlign: "center",
-                    }}
-                  />
-                )}
-                value={otp}
-                onChange={(value: any) => {
-                  setOtp(value);
-                  if (value.length === 6) {
-                    handleVerifyCode(value); // Call handleVerifyCode directly
-                  }
-                }}
-                numInputs={6}
-                renderSeparator={<span style={{ margin: "0 5px" }}></span>}
-                shouldAutoFocus={true} // Automatically focus on the first input
-              />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "30px",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "10px",
-                  width: "100%",
-                }}
-              >
-                <p
-                  style={{
-                    color: "var(--secondary)",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}
-                >
-                  Quickly access your email client
-                </p>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() =>
-                    window.open("https://mail.google.com", "_blank")
-                  }
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    justifyContent: "center",
-                    gap: "10px",
-                    color: "var(--secondary)",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}
-                >
-                  <Image
-                    src="/images/gmail.webp"
-                    alt="Gmail"
-                    width={20}
-                    height={14}
-                  />
-                  Open Gmail
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() =>
-                    window.open("https://outlook.live.com/mail/0/", "_blank")
-                  }
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    color: "var(--secondary)",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}
-                >
-                  <Image
-                    src="/images/outlook.webp"
-                    alt="Outlook"
-                    width={22}
-                    height={20}
-                  />
-                  Open Outlook
-                </Button>
-              </div>
-            </form>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendOtpToEmail();
-              }}
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your coolest email address goes here"
-                required
-              />
+          <Button
+            onClick={() => {
+              supabase.auth.signInWithOAuth({
+                provider: "twitter",
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                },
+              });
+            }}
+          >
+            Continue with X
+          </Button>
+          <Button
+            onClick={() => {
+              supabase.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                },
+              });
+            }}
+          >
+            Continue with Google
+          </Button>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                loading={isLoading}
-                style={{ width: "100%", height: "44px" }}
-              >
-                {isLoading ? "Sending code..." : "Send code"}
-              </Button>
-            </form>
-          )}
           {message && <Message message={message.message} type={message.type} />}
         </div>
       </div>

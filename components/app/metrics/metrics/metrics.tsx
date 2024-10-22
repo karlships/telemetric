@@ -1,16 +1,14 @@
 import { Activity, Event, Project, Revenue, User } from "@/types/index";
-import { motion } from "framer-motion";
+
 import React, { useEffect, useState } from "react";
-import BrowsersCard from "../browsers/browsers";
 import EventsCard from "../events/events";
 
+import { DataType } from "@/types/index";
 import LocationsCard from "../locations/locationscard";
 import Tabs from "../metricstabs/metricstab";
 import OperatingSystemCard from "../os/operatingsystems";
-import ReferrersCard from "../referrer/referrers";
 import VersionsCard from "../version/versions";
 import "./metrics.css";
-import { DataType } from "@/types/index";
 interface MetricsProps {
   selectedProject: Project;
   projects: Project[];
@@ -31,17 +29,24 @@ const Metrics: React.FC<MetricsProps> = ({
   const [revenueData, setRevenueData] = useState<Revenue[]>([]);
   const [revenueTotal, setRevenueTotal] = useState<number>(0);
   const [eventsData, setEventsData] = useState<Event[]>([]);
+  const [sessionsData, setSessionsData] = useState<Activity[]>([]);
   const [currentSelectTabIndex, setCurrentSelectTabIndex] = useState<number>(0);
 
   useEffect(() => {
     if (selectedProject) {
       const uniqueUserSet = new Set();
-      selectedProject.activities.forEach((activity) => {
-        if (activity.initial) {
-          uniqueUserSet.add(activity);
+      console.log("selectedProject", selectedProject);
+
+      const uniqueUserIds = new Set();
+      const uniqueActivities = selectedProject.activities.filter((activity) => {
+        setSessionsData(selectedProject.activities);
+        if (!uniqueUserIds.has(activity.user_id)) {
+          uniqueUserIds.add(activity.user_id);
+          return true;
         }
+        return false;
       });
-      setUniqueActivitiesArray(Array.from(uniqueUserSet) as Activity[]);
+      setUniqueActivitiesArray(uniqueActivities);
 
       setRevenueData(selectedProject.revenue);
       setEventsData(selectedProject.events);
@@ -54,7 +59,7 @@ const Metrics: React.FC<MetricsProps> = ({
 
       updateCurrentUserData(currentSelectTabIndex, selectedProject);
     }
-  }, [selectedProject, currentSelectTabIndex]);
+  }, [selectedProject]);
 
   const updateCurrentUserData = (tabIndex: number, project: Project) => {
     if (tabIndex === 0) {
@@ -89,6 +94,16 @@ const Metrics: React.FC<MetricsProps> = ({
           referrer: event.referrer,
         }))
       );
+    } else if (tabIndex === 3) {
+      setCurrentUserData(
+        sessionsData.map((session) => ({
+          browser: session.browser,
+          os: session.os,
+          location: session.location,
+          version: session.version,
+          referrer: session.referrer,
+        }))
+      );
     }
   };
 
@@ -115,6 +130,12 @@ const Metrics: React.FC<MetricsProps> = ({
       count: eventsData.length.toString(),
       dataType: DataType.EVENTS,
     },
+    {
+      label: "Sessions",
+      activities: sessionsData,
+      count: sessionsData.length.toString(),
+      dataType: DataType.SESSIONS,
+    },
   ];
 
   const osData = tabs[currentSelectTabIndex].activities.map(
@@ -135,49 +156,36 @@ const Metrics: React.FC<MetricsProps> = ({
 
   return (
     <div className="flex justify-center items-center">
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="metrics-container-wrapper"
-      transition={{ duration: 0.5 }}
-    >
-      <div className="metrics-container">
-        <Tabs
-          loading={loading}
-          tabs={tabs}
-          onSelectedTabChanged={handleTabChange}
-          selectedTimeRange={selectedTimeRange}
-        />
+      <div className="metrics-container-wrapper">
+        <div className="metrics-container">
+          <Tabs
+            loading={loading}
+            tabs={tabs}
+            onSelectedTabChanged={handleTabChange}
+            selectedTimeRange={selectedTimeRange}
+          />
 
-        {currentSelectTabIndex === 2 && (
+          {currentSelectTabIndex === 2 && (
+            <div className="metrics-container-item">
+              <EventsCard
+                events={eventsData.map((event) => event.name)}
+                users={uniqueActivitiesArray.map((activity) => activity.id)}
+              />
+            </div>
+          )}
+
           <div className="metrics-container-item">
-            <EventsCard
-              events={eventsData.map((event) => event.name)}
-              users={uniqueActivitiesArray.map((activity) => activity.id)}
-            />
+            <OperatingSystemCard activities={osData} />
           </div>
-        )}
+          <div style={{ width: "fill", maxWidth: "100%" }}>
+            <LocationsCard locationsPassed={locationData} />
+          </div>
 
-        <div className="metrics-container-item">
-          <OperatingSystemCard activities={osData} />
-          {selectedProject.type === "website" && (
-            <BrowsersCard activities={browserData} />
-          )}
-        </div>
-        <div style={{ width: "fill", maxWidth: "100%" }}>
-          <LocationsCard locationsPassed={locationData} />
-        </div>
-
-        <div className="metrics-container-item-2">
-          {selectedProject.type === "website" && (
-            <>
-              <ReferrersCard referrers={referrerData} />
-            </>
-          )}
-          <VersionsCard versions={versionData} />
+          <div className="metrics-container-item-2">
+            <VersionsCard versions={versionData} />
+          </div>
         </div>
       </div>
-    </motion.div>
     </div>
   );
 };

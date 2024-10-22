@@ -1,4 +1,4 @@
-import { Dashboard } from "@/components/app/dashboard";
+import { Dashboard } from "@/components/app/main";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 

@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import React from "react";
 
 interface EventUsage {
@@ -84,6 +83,7 @@ const EventsCard = ({
           style={{
             color: "var(--subtitle)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Users & Percentage
@@ -115,10 +115,7 @@ const EventsCard = ({
           </div>
         ) : (
           eventUsage.map((event) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: eventUsage.indexOf(event) * 0.1 }}
+            <div
               key={event.event}
               style={{
                 display: "flex",
@@ -151,7 +148,7 @@ const EventsCard = ({
                 {event.count} ({event.percentage}%){" "}
                 {/* Display count and percentage */}
               </p>
-            </motion.div>
+            </div>
           ))
         )}
       </div>
