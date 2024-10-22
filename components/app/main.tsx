@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Project } from "@/types/index";
 
@@ -8,6 +8,7 @@ import Metrics from "./metrics/metrics/metrics";
 import { createClient } from "@/utils/supabase/client";
 import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
 import { Navbar } from "./navigation/navbar/navbar";
+import { useSearchParams } from "next/navigation";
 
 export function Dashboard() {
   const supabase = createClient();
@@ -28,12 +29,13 @@ export function Dashboard() {
     setTimeRange(range);
   };
 
-  let hasFetchedProjcets = false;
+  const hasFetchedProjects = useRef(false);
 
   useEffect(() => {
+    setSelectedProject(projects[0]);
     const fetchProjects = async () => {
-      if (hasFetchedProjcets) return;
-      hasFetchedProjcets = true;
+      if (hasFetchedProjects.current) return;
+      hasFetchedProjects.current = true;
       setLoading(true);
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
@@ -74,7 +76,7 @@ export function Dashboard() {
     };
 
     fetchProjects();
-  }, []);
+  }, [projects]);
 
   const fetchProjectData = async (project: Project) => {
     if (project) {
@@ -111,6 +113,10 @@ export function Dashboard() {
     }
   };
 
+  const searchParams = useSearchParams();
+
+  const showHomePage = searchParams.get("showHomePage");
+
   const handleProjectChange = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);
@@ -118,13 +124,11 @@ export function Dashboard() {
 
   if (error) return <div>Error: {error}</div>;
 
-  useEffect(() => {
-    setSelectedProject(projects[0]);
+  // Dependency array to trigger effect when projects change
 
-    console.log(projects); // This will log the updated projects after state change
-  }, [projects]); // Dependency array to trigger effect when projects change
-
-  return (
+  return showHomePage ? (
+    <div>Home Page</div>
+  ) : (
     <div
       style={{
         display: "flex",

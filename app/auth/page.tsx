@@ -51,7 +51,7 @@ const LoginPage = () => {
   // Use useEffect to check auth status when component mounts
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+  }, [checkAuthStatus]);
 
   const sendOtpToEmail = async () => {
     setIsLoading(true);

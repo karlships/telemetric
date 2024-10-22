@@ -62,12 +62,18 @@ const Chart: React.FC<ChartProps> = ({
         start = new Date(now.setFullYear(now.getFullYear() - 1));
         break;
       case "allTime":
-        start = new Date(0); // Start from epoch
+        start = new Date(
+          Math.min(
+            ...activities.map((activity) =>
+              new Date(activity.timestamp).getTime()
+            )
+          )
+        ); // Get the earliest date from activities
         break;
     }
     console.log(start, end);
     return [start, end];
-  }, [selectedTimeRange]);
+  }, [selectedTimeRange, activities]);
   const filteredActivities = activities.filter((activity) => {
     const activityDate = new Date(activity.timestamp);
     return activityDate >= startDate && activityDate <= endDate;

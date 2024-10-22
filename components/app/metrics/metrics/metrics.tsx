@@ -59,7 +59,7 @@ const Metrics: React.FC<MetricsProps> = ({
 
       updateCurrentUserData(currentSelectTabIndex, selectedProject);
     }
-  }, [selectedProject]);
+  }, [selectedProject, currentSelectTabIndex]);
 
   const updateCurrentUserData = (tabIndex: number, project: Project) => {
     if (tabIndex === 0) {
