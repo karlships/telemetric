@@ -591,64 +591,64 @@ function isBot(userAgent: string): boolean {
   return botKeywords.some((keyword) => lowerUserAgent.includes(keyword));
 }
 
-async function getRequestData(req: { userAgent: string; ip: string }): Promise<{
-  reqOS: string | null;
+async function getRequestData(req: { user_agent: string; ip: string }): Promise<{
+  req_os: string | null;
   browser: string | null;
   location: LocationData;
 }> {
-  const userAgent = req.userAgent;
+  const user_agent = req.user_agent;
   const ip = req.ip;
   // Fetch location data
   const location = await getLocation(ip);
   return {
-    reqOS: getOSFromUserAgent(userAgent),
-    browser: getBrowserFromUserAgent(userAgent),
+    req_os: getOSFromUserAgent(user_agent),
+      browser: getBrowserFromUserAgent(user_agent),
     location: location,
   };
 }
 
 // Function to get Browser from User-Agent
-function getBrowserFromUserAgent(userAgent: string): string {
-  if (userAgent.includes("Ddg")) {
+function getBrowserFromUserAgent(user_agent: string): string {
+  if (user_agent.includes("Ddg")) {
     return "DuckDuckGo Browser";
   }
-  if (userAgent.includes("Brave")) {
+  if (user_agent.includes("Brave")) {
     return "Brave";
   }
-  if (userAgent.includes("Vivaldi")) {
+  if (user_agent.includes("Vivaldi")) {
     return "Vivaldi";
   }
-  if (userAgent.includes("SamsungBrowser")) {
+  if (user_agent.includes("SamsungBrowser")) {
     return "Samsung Internet";
   }
-  if (userAgent.includes("Opera Mini")) {
+  if (user_agent.includes("Opera Mini")) {
     return "Opera Mini";
   }
-  if (userAgent.includes("Edge") || userAgent.includes("Edg")) {
+  if (user_agent.includes("Edge") || user_agent.includes("Edg")) {
     return "Edge";
   }
-  if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+  if (user_agent.includes("Opera") || user_agent.includes("OPR")) {
     return "Opera";
   }
-  if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+  if (user_agent.includes("MSIE") || user_agent.includes("Trident")) {
     return "Internet Explorer";
   }
-  if (userAgent.includes("Yandex")) {
+  if (user_agent.includes("Yandex")) {
     return "Yandex Browser";
   }
-  if (userAgent.includes("UCWEB") || userAgent.includes("UCBrowser")) {
+  if (user_agent.includes("UCWEB") || user_agent.includes("UCBrowser")) {
     return "UC Browser";
   }
-  if (userAgent.includes("Focus")) {
+  if (user_agent.includes("Focus")) {
     return "Firefox Focus";
   }
-  if (userAgent.includes("Firefox")) {
+  if (user_agent.includes("Firefox")) {
     return "Firefox";
   }
-  if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+  if (user_agent.includes("Safari") && !user_agent.includes("Chrome")) {
     return "Safari";
   }
-  if (userAgent.includes("Chrome")) {
+  if (user_agent.includes("Chrome")) {
     return "Chrome";
   }
 
@@ -666,25 +666,25 @@ async function handleRequest(req: Request): Promise<Response> {
   try {
     const requestBody = await req.json();
     const {
-      passedRequest,
+      passed_request,
       os,
     } = requestBody;
 
     // Extract User-Agent from request headers
 
-    if (isBot(passedRequest.userAgent)) {
+    if (isBot(passed_request.user_agent)) {
       return new Response("Bot defended", {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
-    const { reqOS, browser, location } = await getRequestData(passedRequest);
+    const { req_os, browser, location } = await getRequestData(passed_request);
 
-    const safeOs = os || reqOS;
+    const safe_os = os || req_os;
 
     const jsonResponse = new Response(
       JSON.stringify({
-        reqOS: safeOs,
+        req_os: safe_os,
         browser: browser,
         location: location,
       }),

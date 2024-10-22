@@ -25,16 +25,18 @@ async function handleRequest(req: Request): Promise<Response> {
   try {
     const requestBody = await req.json();
     const {
-      projectID,
+      project_id,
+      bundle_id,
+      url_running_one,
 
       referrer,
       os,
       version,
-      userID,
+      user_id,
     } = requestBody;
 
     // Set default values for optional fields
-    const safeOs = os || null;
+    const safe_os = os || null;
     // Create a new Request object for the filter function
     const filterRequest = new Request(
       "https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/filter",
@@ -44,11 +46,11 @@ async function handleRequest(req: Request): Promise<Response> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          passedRequest: {
-            userAgent: req.headers.get("User-Agent") || "",
+          passed_request: {
+            user_agent: req.headers.get("User-Agent") || "",
             ip: req.headers.get("cf-connecting-ip") || "127.0.0.1",
           },
-          os: safeOs,
+          os: safe_os,
         }),
       },
     );
@@ -71,11 +73,13 @@ async function handleRequest(req: Request): Promise<Response> {
       .upsert([
         {
           id: activityID, // Replace with the actual column name for activity ID
-          user_id: userID,
-          project_id: projectID,
+          user_id: user_id,
+          project_id: project_id,
           browser: filterData.browser,
-          os: safeOs === null ? filterData.reqOS : safeOs,
+          os: safe_os === null ? filterData.req_os : safe_os,
           referrer: referrer,
+          bundle_id: bundle_id,
+          url_running_one: url_running_one,
           user_agent: req.headers.get("User-Agent") || "",
           location: filterData.location,
           timestamp: new Date().toISOString(),

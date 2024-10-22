@@ -1,5 +1,13 @@
-import 'package:web/web.dart' as web;
+import 'package:web/web.dart';
 
-String getUserAgent() {
-  return web.window.navigator.userAgent.toLowerCase();
+String? getOS() {
+  return null; // Let the server handle OS detection for web
+}
+
+String getWebReferrer() {
+  return window.document.referrer;
+}
+
+String getWebURLRunningOn() {
+  return window.location.href;
 }

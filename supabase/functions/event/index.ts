@@ -26,7 +26,7 @@ async function handleRequest(req: Request): Promise<Response> {
   try {
     const requestBody = await req.json();
     const {
-      projectID,
+      project_id,
       os,
       referrer,
       name,
@@ -35,7 +35,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
     // Extract User-Agent from request headers
 
-    const safeOs = os || null;
+    const safe_os = os || null;
     // Create a new Request object for the filter function
     const filterRequest = new Request(
       "https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/filter",
@@ -45,14 +45,14 @@ async function handleRequest(req: Request): Promise<Response> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          reqString: {
-            userAgent: req.headers.get("User-Agent") || "",
+          passed_request: {
+            user_agent: req.headers.get("User-Agent") || "",
             ip: req.headers.get("cf-connecting-ip") || "127.0.0.1",
           },
-          projectID,
+          project_id,
 
           referrer,
-          os: safeOs,
+          os: safe_os,
           version,
         }),
       },
@@ -78,13 +78,13 @@ async function handleRequest(req: Request): Promise<Response> {
         {
           id: eventID, // Replace with the actual column name for event ID
 
-          project_id: projectID,
+          project_id: project_id,
           timestamp: new Date().toISOString(),
           name: name,
           version: version,
           referrer: referrer,
           browser: filterData.browser,
-          os: safeOs === null ? filterData.reqOS : safeOs,
+          os: safe_os === null ? filterData.req_os : safe_os,
           user_agent: req.headers.get("User-Agent"),
           location: filterData.location,
         },

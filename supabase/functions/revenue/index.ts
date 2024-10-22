@@ -24,7 +24,7 @@ async function handleRequest(req: Request): Promise<Response> {
   try {
     const requestBody = await req.json();
     const {
-      projectID,
+      project_id,
       referrer,
       total,
       os,
@@ -42,11 +42,11 @@ async function handleRequest(req: Request): Promise<Response> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          reqString: {
-            userAgent: req.headers.get("User-Agent") || "",
+          passed_request: {
+            user_agent: req.headers.get("User-Agent") || "",
             ip: req.headers.get("cf-connecting-ip") || "127.0.0.1",
           },
-          projectID,
+          project_id,
 
           referrer,
           os: safeOs,
@@ -69,7 +69,7 @@ async function handleRequest(req: Request): Promise<Response> {
     // If the filter function didn't throw an error, continue with the rest of the function
 
     // Extract User-Agent from request headers
-    const userAgent = req.headers.get("User-Agent") || "";
+    const user_agent = req.headers.get("User-Agent") || "";
 
     const revenueID = globalThis.crypto.randomUUID();
 
@@ -79,10 +79,10 @@ async function handleRequest(req: Request): Promise<Response> {
       .upsert([
         {
           id: revenueID, // Replace with the actual column name for revenue ID
-          project_id: projectID,
+          project_id: project_id,
           timestamp: new Date().toISOString(),
           version: version,
-          user_agent: userAgent,
+          user_agent: user_agent,
           total: total * 100,
           browser: filterData.browser,
           os: safeOs === null ? filterData.reqOS : safeOs,

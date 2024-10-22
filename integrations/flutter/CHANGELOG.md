@@ -1,9 +1,7 @@
 # Changelog
 
-## 0.0.8
+## 0.1.1
 
-- Add support for web
+- Bug fixes
 
-## 0.0.7
-
-- Initial release
+Only use the version displayed here, other versions are not supported.

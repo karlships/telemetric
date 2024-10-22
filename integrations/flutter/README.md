@@ -15,7 +15,7 @@ OR add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  telemetric: ^1.0.0
+  telemetric: ^0.0.9
 ```
 
 ### Usage
@@ -28,6 +28,7 @@ Initialize the Telemetric package with your project ID. This should be done once
 import 'package:telemetric/telemetric.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Telemetric.initialize('YOUR_PROJECT_ID');
 }
 ```

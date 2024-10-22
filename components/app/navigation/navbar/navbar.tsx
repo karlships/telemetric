@@ -1,10 +1,10 @@
 import { Project } from "@/types";
 
+import { UserProfile } from "../../account/userprofile";
 import ProjectSelect from "../projectselect";
 import TimeRangeSelector from "../timerange/timerangeselector";
 import "./navbar.css";
-import { UserProfile } from "../../account/userprofile";
-
+import { ProjectSettings } from "./projectsettings";
 interface HeaderProps {
   projects: Project[];
   loading: boolean;
@@ -39,7 +39,16 @@ export function Navbar({
       <div className="timerange-selector">
         <TimeRangeSelector onSelect={handleTimeRangeSelect} />
       </div>
-      <div style={{ marginLeft: "auto" }}>
+      <div
+        style={{
+          marginLeft: "auto",
+          display: "flex",
+          gap: "10px",
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+      >
+        <ProjectSettings selectedProject={selectedProject} />
         <UserProfile />
       </div>
     </header>

@@ -6,27 +6,57 @@ import 'dart:math' hide log;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../platform.dart';
+// Conditional import for web and non-web platforms
+import 'platform_non_web.dart' if (dart.library.js_interop) 'platform_web.dart';
 
 /// The Telemetric class provides methods to track events and revenue.
 class Telemetric {
   // Private variable to store the project ID
-  static String? _projectID;
-  static String? _userID;
+  static String? _project_id;
+
+  /// The user ID
+  static String? _user_id;
+
+  /// The version of the app
   static String? _version = '1.0.0';
 
+  /// Whether to track in debug mode
+  static bool _track_in_debug = false;
+
+  /// The referrer of the user
+  static String? _referrer;
+
   /// Initializes the Telemetric with a [projectID].
-  static Future<void> init(String projectID, {String? version}) async {
-    _projectID = projectID;
-
+  /// [referrer] is optional and can be used to track the referrer of the user. On Flutter Web, it will be automatically detected.
+  /// On non-web platforms you can provided, for example based on the platform.
+  /// [version] is optional and can be used to track the version of the app. By default it is set to '1.0.0'.
+  /// [trackInDebug] is optional and can be used to send data in debug mode. By default it is set to false.
+  static Future<void> init(String projectID,
+      {String? version, bool trackInDebug = false, String? referrer}) async {
+    _project_id = projectID;
+    _track_in_debug = trackInDebug;
     _version = version;
-
+    _referrer = referrer;
     // Check if user ID exists in storage, if not create a new one
-    if (kDebugMode) return;
+    if (kDebugMode && !_track_in_debug) return;
+    if (kIsWeb && _referrer == null) {
+      _referrer = getWebReferrer();
+    }
+
     await _initializeUserID();
     const url = 'https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/init';
+    String? bundle_id;
+    String? url_running_on;
+    if (!kIsWeb) {
+      final packageInfo = await PackageInfo.fromPlatform();
+
+      bundle_id = packageInfo.packageName;
+    } else {
+      url_running_on = getWebURLRunningOn();
+    }
 
     try {
       // Create a request
@@ -34,9 +64,13 @@ class Telemetric {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'projectID': _projectID,
+          'project_id': _project_id,
           "version": _version,
-          "os": _getOS(),
+          "os": getOS(),
+          "url_running_on": url_running_on,
+          "bundle_id": bundle_id,
+          "referrer": _referrer,
+          "user_id": _user_id,
         }),
       );
 
@@ -52,7 +86,8 @@ class Telemetric {
   /// Tracks an event with a [name]
   static Future<void> event(String name) async {
     if (!safetyCheck("Event '$name'")) return;
-    if (kDebugMode) return;
+    if (kDebugMode && !_track_in_debug) return;
+
     const url = 'https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/event';
 
     try {
@@ -60,10 +95,11 @@ class Telemetric {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'projectID': _projectID,
+          'project_id': _project_id,
           'name': name,
+          "referrer": _referrer,
           "version": _version,
-          "os": _getOS(),
+          "os": getOS(),
         }),
       );
 
@@ -80,7 +116,7 @@ class Telemetric {
   /// Tracks revenue with an [amount]s
   static Future<void> revenue(double amount) async {
     if (!safetyCheck('Revenue')) return;
-    if (kDebugMode) return;
+    if (kDebugMode && !_track_in_debug) return;
     const url = 'https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/revenue';
 
     try {
@@ -88,9 +124,10 @@ class Telemetric {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'projectID': _projectID,
+          'project_id': _project_id,
           'total': amount,
-          "os": _getOS(),
+          "os": getOS(),
+          "referrer": _referrer,
           "version": _version,
         }),
       );
@@ -109,12 +146,12 @@ class Telemetric {
   static bool safetyCheck(String source) {
     bool isSafe = true;
 
-    if (_projectID == null) {
+    if (_project_id == null) {
       log('$source reporting failed. Missing project ID.');
       isSafe = false;
     }
 
-    if (_userID == null) {
+    if (_user_id == null) {
       log('$source reporting failed. Missing user ID. Make sure to call init() before tracking events or revenue. Also make sure to await init()');
       isSafe = false;
     }
@@ -125,10 +162,10 @@ class Telemetric {
   /// Initializes the user ID if it does not exist.
   static Future<void> _initializeUserID() async {
     final prefs = await SharedPreferences.getInstance();
-    _userID = prefs.getString('telemetric_user_id');
-    if (_userID == null) {
-      _userID = _generateUserID();
-      await prefs.setString('telemetric_user_id', _userID!);
+    _user_id = prefs.getString('telemetric_user_id');
+    if (_user_id == null) {
+      _user_id = _generateUserID();
+      await prefs.setString('telemetric_user_id', _user_id!);
     }
   }
 
@@ -157,16 +194,14 @@ class Telemetric {
   static Future<void> saveUserID(String userID) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('telemetric_user_id', userID);
-    _userID = userID;
+    _user_id = userID;
   }
 
   static Future<String?> getUserID() async {
     final prefs = await SharedPreferences.getInstance();
-    _userID = prefs.getString('telemetric_user_id');
-    return _userID;
-  }
-
-  static String? _getOS() {
-    return PlatformUtils.getOS();
+    _user_id = prefs.getString('telemetric_user_id');
+    return _user_id;
   }
 }
+
+// Platform-specific utility function
