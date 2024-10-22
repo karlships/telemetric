@@ -166,10 +166,6 @@ xdg_directories
 3.3
 file:///C:/Users/likam/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.1.0/
 file:///C:/Users/likam/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.1.0/lib/
-telemetric
-3.5
-file:///C:/Users/likam/Documents/AppDevelopment/Webapps/Telemetric-Private/integrations/flutter/
-file:///C:/Users/likam/Documents/AppDevelopment/Webapps/Telemetric-Private/integrations/flutter/lib/
 sky_engine
 3.2
 file:///C:/Users/likam/Documents/AppDevelopment/flutter/bin/cache/pkg/sky_engine/
@@ -186,4 +182,8 @@ flutter_web_plugins
 3.2
 file:///C:/Users/likam/Documents/AppDevelopment/flutter/packages/flutter_web_plugins/
 file:///C:/Users/likam/Documents/AppDevelopment/flutter/packages/flutter_web_plugins/lib/
+telemetric
+3.5
+file:///C:/Users/likam/Documents/Business/telemetric/integrations/flutter/
+file:///C:/Users/likam/Documents/Business/telemetric/integrations/flutter/lib/
 2
