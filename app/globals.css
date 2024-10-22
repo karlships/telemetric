@@ -95,3 +95,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}

@@ -2,6 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const LocationsList = ({
   locations,
@@ -61,7 +67,6 @@ const LocationsList = ({
                 padding: "10px",
                 borderRadius: "0px",
               }}
-              transition={{ delay: sortedLocations.indexOf(location) * 0.01 }}
             >
               {countryCode && (
                 <Image
@@ -71,7 +76,17 @@ const LocationsList = ({
                   height={20}
                 />
               )}
-              <p style={{ color: "var(--secondary)" }}>{location}</p>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <p style={{ color: "var(--secondary)" }}>{location}</p>
+                  </TooltipTrigger>
+
+                  <TooltipContent>
+                    <p>View on Google Maps</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
               <p
                 style={{
