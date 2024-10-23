@@ -1,15 +1,15 @@
 {
   "name": "@offuntitledapps/telemetric",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Telemetric SDK for JavaScript and React",
   "main": "dist/telemetric.bundle.js",
-  "types": "dist/telemetric.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "tsc --emitDeclarationOnly && webpack --mode production",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -17,12 +17,14 @@
     "analytics",
     "react"
   ],
+  "private": false,
   "author": "Your Name",
   "license": "MIT",
-  "peerDependencies": {
+  "dependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@types/react": "^18.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
     "webpack": "^5.95.0",

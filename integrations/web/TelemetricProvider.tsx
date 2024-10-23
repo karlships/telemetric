@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useEffect } from "react";
-import Telemetric from "../javascript/telemetric";
+import React, { createContext, ReactNode, useContext, useEffect } from "react";
+import Telemetric from "./telemetric";
 
 interface TelemetricContextType {
   event: (name: string) => Promise<void>;
@@ -19,12 +19,12 @@ interface TelemetricProviderProps {
   trackOnLocalhost?: boolean;
 }
 
-export function TelemetricProvider({
+export const TelemetricProvider: React.FC<TelemetricProviderProps> = ({
   children,
   projectId,
   version,
   trackOnLocalhost = false,
-}: TelemetricProviderProps) {
+}) => {
   useEffect(() => {
     Telemetric.init(projectId, version, trackOnLocalhost);
   }, [projectId, version, trackOnLocalhost]);
@@ -41,7 +41,7 @@ export function TelemetricProvider({
       {children}
     </TelemetricContext.Provider>
   );
-}
+};
 
 export function useTelemetric(): TelemetricContextType {
   const context = useContext(TelemetricContext);

@@ -1,13 +1,16 @@
 //C:\Users\likam\Documents\AppDevelopment\Webapps\Telemetric-Private\integrations\javascript\dist
 export default class Telemetric {
-  static project_id = null;
-  static user_id = null;
-  static version = null;
-  static track_on_localhost = false;
+  static project_id: string | null = null;
+  static user_id: string | null = null;
+  static version: string | null = null;
+  static track_on_localhost: boolean = false;
+  static initial: boolean = false;
 
-  static initial = false;
-
-  static async init(project_id_param, version, track_on_localhost_param = false) {
+  static async init(
+    project_id_param: string,
+    version: string,
+    track_on_localhost_param: boolean = false,
+  ): Promise<void> {
     this.project_id = project_id_param;
     this.version = version;
     this.track_on_localhost = track_on_localhost_param;
@@ -17,7 +20,7 @@ export default class Telemetric {
     // Check if we should track on localhost
     if (window.location.hostname === "localhost" && !this.track_on_localhost) {
       console.log(
-        "Telemetric initialized successfully, but will not send any data on Localhost."
+        "Telemetric initialized successfully, but will not send any data on Localhost.",
       );
       return;
     }
@@ -42,7 +45,7 @@ export default class Telemetric {
     } catch (e) {}
   }
 
-  static async event(name) {
+  static async event(name: string): Promise<void> {
     if (!this.safetyCheck(`Event '${name}'`)) return;
     if (window.location.hostname === "localhost" && !this.track_on_localhost) {
       console.log("Telemetric: Not tracking on localhost.");
@@ -74,7 +77,7 @@ export default class Telemetric {
     }
   }
 
-  static async revenue(amount) {
+  static async revenue(amount: number): Promise<void> {
     if (!this.safetyCheck("Revenue")) return;
     if (window.location.hostname === "localhost" && !this.track_on_localhost) {
       console.log("Telemetric: Not tracking on localhost.");
@@ -104,7 +107,7 @@ export default class Telemetric {
     }
   }
 
-  static safetyCheck(source) {
+  static safetyCheck(source: string): boolean {
     let isSafe = true;
 
     if (!this.project_id) {
@@ -114,7 +117,7 @@ export default class Telemetric {
 
     if (!this.user_id) {
       console.error(
-        `${source} reporting failed. Missing user ID. Make sure to call init() before tracking events or revenue. Also make sure to await init()`
+        `${source} reporting failed. Missing user ID. Make sure to call init() before tracking events or revenue. Also make sure to await init()`,
       );
       isSafe = false;
     }
@@ -122,7 +125,7 @@ export default class Telemetric {
     return isSafe;
   }
 
-  static async _initializeUserID() {
+  static async _initializeUserID(): Promise<void> {
     this.user_id = localStorage.getItem("telemetric_user_id");
 
     if (!this.user_id) {
@@ -132,20 +135,20 @@ export default class Telemetric {
     }
   }
 
-  static _generateUserID() {
+  static _generateUserID(): string {
     const random = () => Math.floor(Math.random() * 16).toString(16);
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      const r = random();
-      return c === "x" ? r : ((r & 0x3) | 0x8).toString(16);
+      const r = parseInt(random(), 16); // Convert hex string back to number
+      return c === "x" ? random() : ((r & 0x3) | 0x8).toString(16);
     });
   }
 
-  static async saveUserID(userID) {
+  static async saveUserID(userID: string): Promise<void> {
     localStorage.setItem("telemetric_user_id", userID);
     this.user_id = userID;
   }
 
-  static async getUserID() {
+  static async getUserID(): Promise<string | null> {
     this.user_id = localStorage.getItem("telemetric_user_id");
     return this.user_id;
   }
