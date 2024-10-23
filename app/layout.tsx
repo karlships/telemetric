@@ -1,11 +1,11 @@
-
+import { TelemetricProvider } from "@offuntitledapps/telemetric";
 import { createClient } from "@supabase/supabase-js";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // {{ edit_1 }}
+import { Inter } from "next/font/google";
 
-import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,19 +27,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: "0px" }}>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TelemetricProvider
+            projectId="your-project-id"
+            version="1.0.0"
+            trackOnLocalhost={true}
           >
-        {children}
+            {children}
+          </TelemetricProvider>
         </ThemeProvider>
-   
 
         <SpeedInsights />
       </body>
     </html>
   );
 }
-

@@ -27,7 +27,7 @@ async function handleRequest(req: Request): Promise<Response> {
     const {
       project_id,
       bundle_id,
-      url_running_one,
+      url_running_on,
 
       referrer,
       os,
@@ -79,7 +79,7 @@ async function handleRequest(req: Request): Promise<Response> {
           os: safe_os === null ? filterData.req_os : safe_os,
           referrer: referrer,
           bundle_id: bundle_id,
-          url_running_one: url_running_one,
+          url_running_on: url_running_on,
           user_agent: req.headers.get("User-Agent") || "",
           location: filterData.location,
           timestamp: new Date().toISOString(),

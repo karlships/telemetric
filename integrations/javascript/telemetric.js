@@ -7,8 +7,8 @@ export default class Telemetric {
 
   static initial = false;
 
-  static async init(projectID, version, track_on_localhost_param = false) {
-    this.project_id = projectID;
+  static async init(project_id_param, version, track_on_localhost_param = false) {
+    this.project_id = project_id_param;
     this.version = version;
     this.track_on_localhost = track_on_localhost_param;
     await this._initializeUserID();

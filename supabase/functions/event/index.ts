@@ -49,11 +49,7 @@ async function handleRequest(req: Request): Promise<Response> {
             user_agent: req.headers.get("User-Agent") || "",
             ip: req.headers.get("cf-connecting-ip") || "127.0.0.1",
           },
-          project_id,
-
-          referrer,
           os: safe_os,
-          version,
         }),
       },
     );

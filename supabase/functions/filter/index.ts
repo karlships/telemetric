@@ -591,7 +591,9 @@ function isBot(userAgent: string): boolean {
   return botKeywords.some((keyword) => lowerUserAgent.includes(keyword));
 }
 
-async function getRequestData(req: { user_agent: string; ip: string }): Promise<{
+async function getRequestData(
+  req: { user_agent: string; ip: string },
+): Promise<{
   req_os: string | null;
   browser: string | null;
   location: LocationData;
@@ -602,7 +604,7 @@ async function getRequestData(req: { user_agent: string; ip: string }): Promise<
   const location = await getLocation(ip);
   return {
     req_os: getOSFromUserAgent(user_agent),
-      browser: getBrowserFromUserAgent(user_agent),
+    browser: getBrowserFromUserAgent(user_agent),
     location: location,
   };
 }

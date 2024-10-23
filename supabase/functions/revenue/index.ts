@@ -31,7 +31,7 @@ async function handleRequest(req: Request): Promise<Response> {
       version,
     } = requestBody;
 
-    const safeOs = os || null;
+    const safe_os = os || null;
 
     // Create a new Request object for the filter function
     const filterRequest = new Request(
@@ -49,7 +49,7 @@ async function handleRequest(req: Request): Promise<Response> {
           project_id,
 
           referrer,
-          os: safeOs,
+          os: safe_os,
           version,
         }),
       },
@@ -85,7 +85,7 @@ async function handleRequest(req: Request): Promise<Response> {
           user_agent: user_agent,
           total: total * 100,
           browser: filterData.browser,
-          os: safeOs === null ? filterData.reqOS : safeOs,
+          os: safe_os === null ? filterData.req_os : safe_os,
           location: filterData.location,
           referrer: referrer,
         },
