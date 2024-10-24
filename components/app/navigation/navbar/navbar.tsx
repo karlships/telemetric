@@ -15,6 +15,7 @@ interface HeaderProps {
     endDate?: Date
   ) => void;
   selectedProject: Project;
+  setSelectedContent: (content: string) => void;
 }
 
 export function Navbar({
@@ -22,6 +23,7 @@ export function Navbar({
 
   projects,
   onProjectChange,
+  setSelectedContent,
   loading,
   handleTimeRangeSelect,
 }: HeaderProps) {
@@ -48,8 +50,11 @@ export function Navbar({
           flexDirection: "row",
         }}
       >
-        <ProjectSettings selectedProject={selectedProject} />
-        <UserProfile />
+        <ProjectSettings
+          selectedProject={selectedProject}
+          setSelectedContent={setSelectedContent}
+        />
+        <UserProfile setSelectedContent={setSelectedContent} />
       </div>
     </header>
   );

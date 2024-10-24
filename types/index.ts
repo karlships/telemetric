@@ -8,6 +8,8 @@ export interface Project {
   events: Event[];
   url: string;
   favIconURL: string;
+  bundle_id: string;
+  url_running_on: string;
 }
 
 export interface Location {
@@ -32,7 +34,7 @@ export interface Activity {
 export interface User {
   browser: string;
   os: string;
-    location: Location;
+  location: Location;
 
   version: string;
 }

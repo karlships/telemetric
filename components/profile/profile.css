@@ -1,0 +1,29 @@
+.profile-container {
+  display: flex;
+  width: 100%;
+
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: var(--dominant);
+
+  align-self: center;
+  justify-self: center;
+  width: 80%;
+}
+
+.profile-container-wrapper-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import { TelemetricProviderClient } from "@/components/TelemetricProviderClient";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <TelemetricProviderClient>{children}</TelemetricProviderClient>
       </body>
     </html>
   );

@@ -1,4 +1,6 @@
-import React, { createContext, ReactNode, useContext, useEffect } from "react";
+"use client";
+
+import * as React from "react";
 import Telemetric from "./telemetric";
 
 interface TelemetricContextType {
@@ -8,24 +10,24 @@ interface TelemetricContextType {
   saveUserId: (userId: string) => Promise<void>;
 }
 
-const TelemetricContext = createContext<TelemetricContextType | undefined>(
-  undefined
-);
+const TelemetricContext = React.createContext<
+  TelemetricContextType | undefined
+>(undefined);
 
 interface TelemetricProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
   projectId: string;
   version: string;
   trackOnLocalhost?: boolean;
 }
 
-export const TelemetricProvider: React.FC<TelemetricProviderProps> = ({
+export const TelemetricProvider = ({
   children,
   projectId,
   version,
   trackOnLocalhost = false,
-}) => {
-  useEffect(() => {
+}: TelemetricProviderProps) => {
+  React.useEffect(() => {
     Telemetric.init(projectId, version, trackOnLocalhost);
   }, [projectId, version, trackOnLocalhost]);
 
@@ -44,7 +46,7 @@ export const TelemetricProvider: React.FC<TelemetricProviderProps> = ({
 };
 
 export function useTelemetric(): TelemetricContextType {
-  const context = useContext(TelemetricContext);
+  const context = React.useContext(TelemetricContext);
   if (context === undefined) {
     throw new Error("useTelemetric must be used within a TelemetricProvider");
   }

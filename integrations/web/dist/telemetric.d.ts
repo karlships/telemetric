@@ -1,4 +1,4 @@
-export default class Telemetric {
+declare class Telemetric {
     static project_id: string | null;
     static user_id: string | null;
     static version: string | null;
@@ -13,3 +13,4 @@ export default class Telemetric {
     static saveUserID(userID: string): Promise<void>;
     static getUserID(): Promise<string | null>;
 }
+export default Telemetric;

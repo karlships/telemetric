@@ -1,5 +1,5 @@
 //C:\Users\likam\Documents\AppDevelopment\Webapps\Telemetric-Private\integrations\javascript\dist
-export default class Telemetric {
+class Telemetric {
   static project_id: string | null = null;
   static user_id: string | null = null;
   static version: string | null = null;
@@ -153,3 +153,5 @@ export default class Telemetric {
     return this.user_id;
   }
 }
+
+export default Telemetric;

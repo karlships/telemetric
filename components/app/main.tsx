@@ -9,12 +9,18 @@ import { createClient } from "@/utils/supabase/client";
 import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
 import { Navbar } from "./navigation/navbar/navbar";
 import { useSearchParams } from "next/navigation";
+import { UserProfile } from "./account/userprofile";
+import { ProjectSettings } from "./navigation/navbar/projectsettings";
+import { Profile } from "../profile/profile";
+import { Settings } from "../settings/settings";
+import { Telemetric } from "@offuntitledapps/telemetric";
 
 export function Dashboard() {
   const supabase = createClient();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedContent, setSelectedContent] = useState<string>("metrics");
 
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +38,7 @@ export function Dashboard() {
   const hasFetchedProjects = useRef(false);
 
   useEffect(() => {
+    Telemetric.revenue(100);
     setSelectedProject(projects[0]);
     const fetchProjects = async () => {
       if (hasFetchedProjects.current) return;
@@ -124,6 +131,25 @@ export function Dashboard() {
 
   if (error) return <div>Error: {error}</div>;
 
+  const renderContent = () => {
+    if (selectedContent === "metrics") {
+      return (
+        <div>
+          <Metrics
+            selectedProject={selectedProject!}
+            projects={projects}
+            selectedTimeRange={timeRange}
+            loading={loading}
+          />
+        </div>
+      );
+    } else if (selectedContent === "settings") {
+      return <Settings />;
+    } else if (selectedContent === "profile") {
+      return <Profile />;
+    }
+  };
+
   // Dependency array to trigger effect when projects change
 
   return showHomePage ? (
@@ -147,6 +173,7 @@ export function Dashboard() {
         projects={projects}
         loading={loading}
         onProjectChange={handleProjectChange}
+        setSelectedContent={setSelectedContent}
         handleTimeRangeSelect={handleTimeRangeSelect}
       />
 
@@ -158,12 +185,7 @@ export function Dashboard() {
           minHeight: "100vh",
         }}
       >
-        <Metrics
-          selectedProject={selectedProject!}
-          projects={projects}
-          selectedTimeRange={timeRange}
-          loading={loading}
-        />
+        {renderContent()}
       </main>
       <BottomNavbar
         loading={loading}

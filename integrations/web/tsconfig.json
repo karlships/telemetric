@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
     "target": "es5",
     "module": "commonjs",
+    "lib": ["dom", "es2015"],
     "jsx": "react",
     "declaration": true,
     "declarationDir": "./dist",
+    "outDir": "./dist",
+    "strict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx"],
+  "include": ["./src/**/*", "index.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -38,8 +38,11 @@ import {
 } from "lucide-react";
 import { logout } from "@/app/auth/actions";
 
-export function UserProfile() {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+export function UserProfile({
+  setSelectedContent,
+}: {
+  setSelectedContent: (content: string) => void;
+}) {
   const [initials, setInitials] = useState<string>("");
   const supabase = createClient();
   const [user, setUser] = useState<any | null>(null);
@@ -103,86 +106,18 @@ export function UserProfile() {
       if (user?.user_metadata?.avatar_url) {
         setPfpImageUrl(user.user_metadata.avatar_url);
       }
-      setUser(user);
     };
 
     fetchUserData();
   }, [supabase.auth]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar style={{ width: "30px", height: "30px", cursor: "pointer" }}>
-          <AvatarImage src={pfpImageUrl || ""} alt="User Avatar" />
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel
-          style={{ fontSize: "14px", fontWeight: "bold", paddingBottom: "0px" }}
-        >
-          {user?.user_metadata?.name}
-        </DropdownMenuLabel>
-        <DropdownMenuLabel
-          style={{
-            fontSize: "12px",
-            color: "var(--subtitle)",
-            paddingTop: "0px",
-          }}
-        >
-          {user?.email}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <HelpCircle size={16} />
-              <div style={{ marginLeft: "10px" }}></div>
-              <span>Support</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem ref={githubIssueRef}>
-                  <Github />
-                  <span>GitHub</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem ref={emailRef}>
-                  <Mail />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem ref={xRef}>
-                  <MessageSquare />
-                  <span>DM me on X</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem ref={docsRef}>
-          <Book />
-          <span>Docs</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem ref={githubRef}>
-          <Github />
-          <span>GitHub Repo</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem ref={homePageRef}>
-          <Link />
-          <span>Homepage</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <User style={{ color: "red" }} />
-          <span style={{ color: "red" }}>Delete Account</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={logout}>
-          <LogOut />
-          <span>Log out</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Avatar
+      style={{ width: "30px", height: "30px", cursor: "pointer" }}
+      onClick={() => setSelectedContent("profile")}
+    >
+      <AvatarImage src={pfpImageUrl || ""} alt="User Avatar" />
+      <AvatarFallback>{initials}</AvatarFallback>
+    </Avatar>
   );
 }

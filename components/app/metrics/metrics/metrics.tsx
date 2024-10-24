@@ -7,6 +7,7 @@ import { DataType } from "@/types/index";
 import LocationsCard from "../locations/locationscard";
 import Tabs from "../metricstabs/metricstab";
 import OperatingSystemCard from "../os/operatingsystems";
+import BrowserCard from "../browsers/browsers";
 import VersionsCard from "../version/versions";
 import "./metrics.css";
 interface MetricsProps {
@@ -50,12 +51,18 @@ const Metrics: React.FC<MetricsProps> = ({
 
       setRevenueData(selectedProject.revenue);
       setEventsData(selectedProject.events);
-      setRevenueTotal(
-        selectedProject.revenue.reduce(
-          (total, revenue) => total + parseFloat(revenue.total),
-          0
-        )
+      // This code calculates the total revenue for the selected project
+      // It does this by:
+      // 1. Using the reduce method on the selectedProject.revenue array
+      // 2. For each revenue item, it parses the 'total' string to a float
+      // 3. Adds this parsed float to the running total
+      // 4. Starts with an initial value of 0
+      // 5. Finally, sets the calculated total to the revenueTotal state
+      const totalInDollars = selectedProject.revenue.reduce(
+        (total, revenue) => total + parseFloat(revenue.total) / 100,
+        0
       );
+      setRevenueTotal(totalInDollars);
 
       updateCurrentUserData(currentSelectTabIndex, selectedProject);
     }
@@ -73,7 +80,6 @@ const Metrics: React.FC<MetricsProps> = ({
         }))
       );
     } else if (tabIndex === 1) {
-      console.log("revenueData", project.revenue);
       setCurrentUserData(
         project.revenue.map((revenue) => ({
           browser: revenue.browser,
@@ -84,7 +90,6 @@ const Metrics: React.FC<MetricsProps> = ({
         }))
       );
     } else if (tabIndex === 2) {
-      console.log("eventsData", project.events);
       setCurrentUserData(
         project.events.map((event) => ({
           browser: event.browser,
@@ -176,6 +181,9 @@ const Metrics: React.FC<MetricsProps> = ({
 
           <div className="metrics-container-item">
             <OperatingSystemCard activities={osData} />
+          </div>
+          <div className="metrics-container-item">
+            <BrowserCard activities={browserData} />
           </div>
           <div style={{ width: "fill", maxWidth: "100%" }}>
             <LocationsCard locationsPassed={locationData} />

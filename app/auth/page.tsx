@@ -39,19 +39,19 @@ const LoginPage = () => {
   const supabase = createClient();
   const router = useRouter();
 
-  const checkAuthStatus = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session) {
-      router.push("/");
-    }
-  };
-
   // Use useEffect to check auth status when component mounts
   useEffect(() => {
+    const checkAuthStatus = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        router.push("/");
+      }
+    };
+
     checkAuthStatus();
-  }, [checkAuthStatus]);
+  }, []);
 
   const sendOtpToEmail = async () => {
     setIsLoading(true);
