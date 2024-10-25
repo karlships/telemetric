@@ -30,7 +30,7 @@ export default async function HomePage() {
         }}
       >
         <h1 style={{ color: "var(--text)" }}>Welcome to Your Dashboard</h1>
-        <UserProfile />
+        <UserProfile setSelectedContent={() => {}} />
       </header>
       <main
         style={{

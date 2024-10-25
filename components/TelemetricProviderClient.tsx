@@ -10,9 +10,9 @@ export function TelemetricProviderClient({
 }) {
   return (
     <TelemetricProvider
-      projectId="c1badaba-2f6e-4a92-a0f8-eb173bdc03f2"
-      version="1.0.2"
-      trackOnLocalhost={true}
+      projectId="364b0efc-6a84-43a6-ae52-39b2cde18139"
+      version="1.0.0"
+      trackOnLocalhost={false}
     >
       {children}
     </TelemetricProvider>

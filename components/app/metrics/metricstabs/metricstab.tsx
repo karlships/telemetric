@@ -17,6 +17,8 @@ interface TabsProps {
   onSelectedTabChanged?: (index: number) => void;
   selectedTimeRange: string;
   loading: boolean;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 const Tabs: React.FC<TabsProps> = ({
@@ -25,6 +27,8 @@ const Tabs: React.FC<TabsProps> = ({
   onSelectedTabChanged,
   selectedTimeRange,
   loading,
+  startDate,
+  endDate,
 }) => {
   const [activeIndex, setActiveIndex] = useState(activeTabIndex);
 
@@ -69,6 +73,8 @@ const Tabs: React.FC<TabsProps> = ({
           activities={tabs[activeIndex].activities}
           selectedTimeRange={selectedTimeRange}
           dataType={tabs[activeIndex].dataType}
+          startDate={startDate}
+          endDate={endDate}
         />
       </div>
     </div>

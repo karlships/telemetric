@@ -10,11 +10,15 @@ import OperatingSystemCard from "../os/operatingsystems";
 import BrowserCard from "../browsers/browsers";
 import VersionsCard from "../version/versions";
 import "./metrics.css";
+import Chart from "../charts/chart";
+
 interface MetricsProps {
   selectedProject: Project;
   projects: Project[];
   selectedTimeRange: string;
   loading: boolean;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 const Metrics: React.FC<MetricsProps> = ({
@@ -22,6 +26,8 @@ const Metrics: React.FC<MetricsProps> = ({
   projects,
   selectedTimeRange,
   loading,
+  startDate,
+  endDate,
 }) => {
   const [uniqueActivitiesArray, setUniqueActivitiesArray] = useState<
     Activity[]
@@ -38,35 +44,98 @@ const Metrics: React.FC<MetricsProps> = ({
       const uniqueUserSet = new Set();
       console.log("selectedProject", selectedProject);
 
-      const uniqueUserIds = new Set();
-      const uniqueActivities = selectedProject.activities.filter((activity) => {
-        setSessionsData(selectedProject.activities);
-        if (!uniqueUserIds.has(activity.user_id)) {
-          uniqueUserIds.add(activity.user_id);
+      // Filter activities
+      const filteredActivities = selectedProject.activities.filter(
+        (activity) => {
+          return isWithinSelectedTimeRange(
+            activity.timestamp,
+            selectedTimeRange,
+            startDate,
+            endDate
+          );
+        }
+      );
+
+      // Get unique activities
+      const uniqueActivities = filteredActivities.filter((activity) => {
+        if (!uniqueUserSet.has(activity.user_id)) {
+          uniqueUserSet.add(activity.user_id);
           return true;
         }
         return false;
       });
       setUniqueActivitiesArray(uniqueActivities);
+      setSessionsData(filteredActivities);
 
-      setRevenueData(selectedProject.revenue);
-      setEventsData(selectedProject.events);
-      // This code calculates the total revenue for the selected project
-      // It does this by:
-      // 1. Using the reduce method on the selectedProject.revenue array
-      // 2. For each revenue item, it parses the 'total' string to a float
-      // 3. Adds this parsed float to the running total
-      // 4. Starts with an initial value of 0
-      // 5. Finally, sets the calculated total to the revenueTotal state
-      const totalInDollars = selectedProject.revenue.reduce(
+      // Filter revenue
+      const filteredRevenue = selectedProject.revenue.filter((revenue) => {
+        return isWithinSelectedTimeRange(
+          revenue.timestamp,
+          selectedTimeRange,
+          startDate,
+          endDate
+        );
+      });
+      setRevenueData(filteredRevenue);
+
+      // Calculate total revenue
+      const totalInDollars = filteredRevenue.reduce(
         (total, revenue) => total + parseFloat(revenue.total) / 100,
         0
       );
-      setRevenueTotal(totalInDollars);
+      const roundedTotalInDollars = Math.ceil(totalInDollars);
+      setRevenueTotal(roundedTotalInDollars);
 
-      updateCurrentUserData(currentSelectTabIndex, selectedProject);
+      // Filter events
+      const filteredEvents = selectedProject.events.filter((event) => {
+        return isWithinSelectedTimeRange(
+          event.timestamp,
+          selectedTimeRange,
+          startDate,
+          endDate
+        );
+      });
+      setEventsData(filteredEvents);
+
+      // Update current user data
+      updateCurrentUserData(currentSelectTabIndex, {
+        ...selectedProject,
+        activities: filteredActivities,
+        revenue: filteredRevenue,
+        events: filteredEvents,
+      });
     }
-  }, [selectedProject, currentSelectTabIndex]);
+  }, [
+    selectedProject,
+    currentSelectTabIndex,
+    selectedTimeRange,
+    startDate,
+    endDate,
+  ]);
+
+  const isWithinSelectedTimeRange = (
+    timestamp: string,
+    range: string,
+    rangeStartDate?: Date,
+    rangeEndDate?: Date
+  ): boolean => {
+    const date = new Date(timestamp);
+
+    // Always use the provided date range for filtering
+    if (rangeStartDate && rangeEndDate) {
+      // Set the hours to ensure full day coverage
+      const startDate = new Date(rangeStartDate);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(rangeEndDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      return date >= startDate && date <= endDate;
+    }
+
+    // Fallback to true if no date range provided
+    return true;
+  };
 
   const updateCurrentUserData = (tabIndex: number, project: Project) => {
     if (tabIndex === 0) {
@@ -168,6 +237,9 @@ const Metrics: React.FC<MetricsProps> = ({
             tabs={tabs}
             onSelectedTabChanged={handleTabChange}
             selectedTimeRange={selectedTimeRange}
+            startDate={startDate}
+            endDate={endDate}
+  
           />
 
           {currentSelectTabIndex === 2 && (

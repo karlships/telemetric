@@ -24,65 +24,34 @@ interface AggregatedData {
 interface ChartProps {
   activities: Activity[];
   selectedTimeRange: string;
-  dataType: DataType; // Add the dataType prop
+  dataType: DataType;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 const Chart: React.FC<ChartProps> = ({
   activities,
   selectedTimeRange,
   dataType,
+  startDate,
+  endDate,
 }) => {
-  // Get start and end dates from the selected time range
+  // Create default dates if not provided
+  const effectiveStartDate = startDate || new Date(0);
+  const effectiveEndDate = endDate || new Date();
 
-  const [startDate, endDate] = React.useMemo(() => {
-    const end = new Date();
-    let start = new Date();
-    const now = new Date();
-    switch (selectedTimeRange) {
-      case "today":
-        start = new Date(now.setHours(0, 0, 0, 0));
-        break;
-      case "yesterday":
-        start = new Date(now.setDate(now.getDate() - 1));
-        start.setHours(0, 0, 0, 0);
-        break;
-      case "last72hours":
-        start = new Date(now.setHours(now.getHours() - 72));
-        break;
-      case "last7days":
-        start = new Date(now.setDate(now.getDate() - 7));
-        break;
-      case "last30days":
-        start = new Date(now.setDate(now.getDate() - 30));
-        break;
-      case "last90days":
-        start = new Date(now.setDate(now.getDate() - 90));
-        break;
-      case "lastYear":
-        start = new Date(now.setFullYear(now.getFullYear() - 1));
-        break;
-      case "allTime":
-        start = new Date(
-          Math.min(
-            ...activities.map((activity) =>
-              new Date(activity.timestamp).getTime()
-            )
-          )
-        ); // Get the earliest date from activities
-        break;
-    }
-    console.log(start, end);
-    return [start, end];
-  }, [selectedTimeRange, activities]);
+  // Filter activities using the effective dates
   const filteredActivities = activities.filter((activity) => {
     const activityDate = new Date(activity.timestamp);
-    return activityDate >= startDate && activityDate <= endDate;
+    return (
+      activityDate >= effectiveStartDate && activityDate <= effectiveEndDate
+    );
   });
 
   // Transform activities into the format required by the chart
   const data = filteredActivities.map((activity) => ({
-    name: new Date(activity.timestamp).toISOString().split("T")[0], // Get the date in YYYY-MM-DD format
-    users: 1, // Each activity represents a unique user
+    name: new Date(activity.timestamp).toISOString().split("T")[0],
+    users: 1,
   }));
 
   // Aggregate users by date
@@ -103,11 +72,12 @@ const Chart: React.FC<ChartProps> = ({
   const completeData: AggregatedData[] = [];
   const totalDays =
     Math.ceil(
-      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      (effectiveEndDate.getTime() - effectiveStartDate.getTime()) /
+        (1000 * 60 * 60 * 24)
     ) + 1; // Include end date
   for (let i = 0; i < totalDays; i++) {
-    const date = new Date(startDate);
-    date.setDate(startDate.getDate() + i);
+    const date = new Date(effectiveStartDate);
+    date.setDate(effectiveStartDate.getDate() + i);
     const dateString = date.toISOString().split("T")[0];
     const usersCount =
       aggregatedData.find((item) => item.name === dateString)?.users || 0;

@@ -18,63 +18,116 @@ import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { format } from "util";
+import { format as dateFormat } from "date-fns"; // Change from util.format to date-fns format
 
 interface TimeRangeSelectorProps {
   onSelect: (range: string, startDate?: Date, endDate?: Date) => void;
+  activities?: Array<{ timestamp: string }>;
 }
 
-const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ onSelect }) => {
+const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
+  onSelect,
+  activities = [],
+}) => {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
-  const [singleDate, setSingleDate] = React.useState<Date>();
   const [selectedRange, setSelectedRange] = React.useState<string>("last7days");
 
   const handlePresetChange = (value: string) => {
     const now = new Date();
     let startDate: Date;
+    let endDate = new Date(now);
 
     switch (value) {
       case "today":
-        startDate = new Date(now.setHours(0, 0, 0, 0));
-        break;
-      case "yesterday":
-        startDate = new Date(now.setDate(now.getDate() - 1));
+        startDate = new Date(now);
         startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
+      case "last48hours": {
+        startDate = new Date(now);
+        startDate.setTime(now.getTime() - 48 * 60 * 60 * 1000);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(now);
+        endDate.setTime(now.getTime() - 24 * 60 * 60 * 1000);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      }
       case "last72hours":
-        startDate = new Date(now.setHours(now.getHours() - 72));
+        startDate = new Date(now);
+        startDate.setTime(now.getTime() - 72 * 60 * 60 * 1000);
         break;
       case "last7days":
-        startDate = new Date(now.setDate(now.getDate() - 7));
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "last30days":
-        startDate = new Date(now.setDate(now.getDate() - 30));
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - 30);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "last90days":
-        startDate = new Date(now.setDate(now.getDate() - 90));
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - 90);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "lastYear":
-        startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+        startDate = new Date(now);
+        startDate.setFullYear(now.getFullYear() - 1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "allTime":
-        startDate = new Date(0); // Start from epoch
+        if (activities.length > 0) {
+          startDate = new Date(
+            Math.min(
+              ...activities.map((activity) =>
+                new Date(activity.timestamp).getTime()
+              )
+            )
+          );
+        } else {
+          startDate = new Date(0);
+        }
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       default:
         return;
     }
 
     setSelectedRange(value);
-    onSelect(value, startDate, new Date()); // Call onSelect with the selected range
+    setDateRange({ from: startDate, to: endDate });
+    onSelect(value, startDate, endDate);
   };
 
   const handleRangeSelect = (range: DateRange | undefined) => {
     setDateRange(range);
     if (range?.from && range?.to) {
-      onSelect("custom", range.from, range.to); // Call onSelect with the custom range
+      setSelectedRange("custom");
+      onSelect("custom", range.from, range.to);
     }
+  };
+
+  const formatDateRange = () => {
+    if (!dateRange?.from) return "Pick a date range";
+
+    if (selectedRange !== "custom") {
+      return selectedRange
+        .replace(/([A-Z])/g, " $1")
+        .toLowerCase()
+        .replace(/^./, (str) => str.toUpperCase());
+    }
+
+    return `${dateFormat(dateRange.from, "MMM d, yyyy")} - ${
+      dateRange.to ? dateFormat(dateRange.to, "MMM d, yyyy") : "..."
+    }`;
   };
 
   return (
@@ -85,11 +138,11 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ onSelect }) => {
             variant={"outline"}
             className={cn(
               "w-[240px] justify-start text-left font-normal",
-              !singleDate && "text-muted-foreground"
+              !dateRange && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {singleDate ? format(singleDate, "PPP") : <span>Pick a date</span>}
+            <span>{formatDateRange()}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent

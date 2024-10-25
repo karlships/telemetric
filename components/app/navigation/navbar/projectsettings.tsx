@@ -23,16 +23,6 @@ export function ProjectSettings({
   setSelectedContent: (content: string) => void;
 }) {
   const supabase = createClient();
-  if (!selectedProject) return null;
-  const [name, setName] = useState(selectedProject.name);
-
-  const handleSave = async () => {
-    console.log("Saving project name:", name);
-    await supabase
-      .from("projects")
-      .update({ name })
-      .eq("id", selectedProject.id);
-  };
 
   return (
     <Button variant="ghost" onClick={() => setSelectedContent("settings")}>

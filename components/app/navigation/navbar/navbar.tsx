@@ -30,6 +30,8 @@ export function Navbar({
   // Check if the selected project has a metadata type of 'app'
   const showEnvironmentSelect = selectedProject?.type === "app";
 
+  if (!selectedProject) return null;
+
   return (
     <header className="navbar">
       <ProjectSelect
@@ -39,7 +41,10 @@ export function Navbar({
         loading={loading}
       />
       <div className="timerange-selector">
-        <TimeRangeSelector onSelect={handleTimeRangeSelect} />
+        <TimeRangeSelector
+          onSelect={handleTimeRangeSelect}
+          activities={selectedProject.activities}
+        />
       </div>
       <div
         style={{

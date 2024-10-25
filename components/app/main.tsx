@@ -26,13 +26,17 @@ export function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [timeRange, setTimeRange] = useState<string>("last7days");
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
 
   const handleTimeRangeSelect = async (
     range: string,
-    startDate?: Date,
-    endDate?: Date
+    start?: Date,
+    end?: Date
   ) => {
     setTimeRange(range);
+    setStartDate(start);
+    setEndDate(end);
   };
 
   const hasFetchedProjects = useRef(false);
@@ -140,6 +144,8 @@ export function Dashboard() {
             projects={projects}
             selectedTimeRange={timeRange}
             loading={loading}
+            startDate={startDate}
+            endDate={endDate}
           />
         </div>
       );

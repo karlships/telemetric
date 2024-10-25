@@ -26,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TelemetricProviderClient>{children}</TelemetricProviderClient>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <TelemetricProviderClient>{children}</TelemetricProviderClient>
+        </ThemeProvider>
       </body>
     </html>
   );
