@@ -76,7 +76,7 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
               }}
             >
               <Image
-                src={"/images/logo.png"}
+                src={"/icon.png"}
                 width={15}
                 height={15}
                 style={{
