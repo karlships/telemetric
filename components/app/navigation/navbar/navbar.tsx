@@ -1,5 +1,6 @@
 import { Project } from "@/types";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserProfile } from "../../account/userprofile";
 import ProjectSelect from "../projectselect";
 import TimeRangeSelector from "../timerange/timerangeselector";
@@ -30,7 +31,14 @@ export function Navbar({
   // Check if the selected project has a metadata type of 'app'
   const showEnvironmentSelect = selectedProject?.type === "app";
 
-  if (!selectedProject) return null;
+  if (!selectedProject)
+    return (
+      <header className="navbar">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </header>
+    );
 
   return (
     <header className="navbar">

@@ -4,10 +4,12 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Project } from "@/types";
+import { PlusCircle } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { useState } from "react";
@@ -27,28 +29,32 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
 }) => {
   const [appIcons, setAppIcons] = useState<Record<string, string>>({});
 
-  const fetchAppIcon = async (bundleId: string) => {
-    if (bundleId.startsWith("https://")) {
+  const fetchAppIcon = async (selectedProject: Project) => {
+    // Check first activity for bundle ID or URL
+    if (selectedProject.bundle_id) {
+      const response = await fetch(
+        `https://itunes.apple.com/lookup?bundleId=${selectedProject.bundle_id}`
+      );
+      const data = await response.json();
+      if (data.resultCount > 0) {
+        const appData = data.results[0];
+        return appData.artworkUrl100; // Use the 100x100 icon URL
+      }
+    } else if (selectedProject.url_running_on) {
       return (
-        "https://www.google.com/s2/favicons?domain=" + bundleId + "&sz=256"
+        "https://www.google.com/s2/favicons?domain=" +
+        selectedProject.url_running_on +
+        "&sz=256"
       );
     }
 
-    const response = await fetch(
-      `https://itunes.apple.com/lookup?bundleId=${bundleId}`
-    );
-    const data = await response.json();
-    if (data.resultCount > 0) {
-      const appData = data.results[0];
-      return appData.artworkUrl100; // Use the 100x100 icon URL
-    }
-    return "null"; // Return null if no icon is found
+    return "/icon.png";
   };
 
   React.useEffect(() => {
     if (projects.length > 0) {
       projects.forEach(async (project) => {
-        const icon = await fetchAppIcon(project.url);
+        const icon = await fetchAppIcon(project);
         setAppIcons((prev) => ({ ...prev, [project.id]: icon }));
       });
     }
@@ -82,9 +88,8 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
                 style={{
                   width: "15px",
                   height: "15px",
-                  borderRadius: "50%",
                 }}
-                alt={"Loading..."} // Added alt attribute for accessibility
+                alt={"Loading..."}
               />{" "}
               Loading...
             </div>
@@ -110,14 +115,26 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
                   style={{
                     width: "15px",
                     height: "15px",
-                    borderRadius: "50%",
                   }}
-                  alt={project.name} // Added alt attribute for accessibility
+                  alt={project.name}
                 />{" "}
                 {project.name}
               </div>
             </SelectItem>
           ))}
+          <SelectSeparator />
+          <SelectItem value="create-new">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <PlusCircle className="w-4 h-4" />
+              Create New Project
+            </div>
+          </SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

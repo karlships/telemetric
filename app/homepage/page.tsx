@@ -1,6 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { UserProfile } from "@/components/app/account/userprofile";
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -28,10 +27,7 @@ export default async function HomePage() {
           alignItems: "center",
           marginBottom: "20px",
         }}
-      >
-        <h1 style={{ color: "var(--text)" }}>Welcome to Your Dashboard</h1>
-        <UserProfile setSelectedContent={() => {}} />
-      </header>
+      ></header>
       <main
         style={{
           flex: 1,

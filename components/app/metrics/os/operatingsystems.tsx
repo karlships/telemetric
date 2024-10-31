@@ -124,13 +124,7 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
                 width={20}
                 height={20}
                 style={{
-                  filter:
-                    os.os.toLowerCase() === "ios" &&
-                    typeof window !== "undefined" &&
-                    window.matchMedia &&
-                    window.matchMedia("(prefers-color-scheme: dark)").matches
-                      ? "invert(1)"
-                      : "none",
+                  filter: os.os.toLowerCase() === "ios" ? "invert(1)" : "none",
                 }}
               />
 

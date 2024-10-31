@@ -1,42 +1,14 @@
 "use client";
 
-import { Project, SelectedNavItem } from "@/types/index";
-import { useState, useEffect, useRef } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { createClient } from "@/utils/supabase/client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuPortal,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import {
-  User,
-  CreditCard,
-  Settings,
-  Keyboard,
-  Users,
-  UserPlus,
-  Mail,
-  MessageSquare,
-  PlusCircle,
-  Plus,
-  Github,
-  LifeBuoy,
-  LogOut,
-  Link,
-  HelpCircle,
-  Book,
-} from "lucide-react";
-import { logout } from "@/app/auth/actions";
+import { useEffect, useRef, useState } from "react";
 
 export function UserProfile({
   setSelectedContent,
@@ -112,12 +84,19 @@ export function UserProfile({
   }, [supabase.auth]);
 
   return (
-    <Avatar
-      style={{ width: "30px", height: "30px", cursor: "pointer" }}
-      onClick={() => setSelectedContent("profile")}
-    >
-      <AvatarImage src={pfpImageUrl || ""} alt="User Avatar" />
-      <AvatarFallback>{initials}</AvatarFallback>
-    </Avatar>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Avatar
+            style={{ width: "30px", height: "30px", cursor: "pointer" }}
+            onClick={() => setSelectedContent("profile")}
+          >
+            <AvatarImage src={pfpImageUrl || ""} alt="User Avatar" />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+        </TooltipTrigger>
+        <TooltipContent>Help, Account & more</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

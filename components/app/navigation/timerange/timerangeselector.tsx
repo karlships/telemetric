@@ -1,24 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/dialog"; // Assuming you have a Dialog component
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import {
   Select,
-  SelectItem,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { addDays } from "date-fns";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { addDays, format as dateFormat } from "date-fns";
+import React from "react";
 import { DateRange } from "react-day-picker";
-import { format as dateFormat } from "date-fns"; // Change from util.format to date-fns format
 
 interface TimeRangeSelectorProps {
   onSelect: (range: string, startDate?: Date, endDate?: Date) => void;
@@ -44,15 +42,13 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
       case "today":
         startDate = new Date(now);
         startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
+        endDate = new Date(now);
         break;
       case "last48hours": {
         startDate = new Date(now);
         startDate.setTime(now.getTime() - 48 * 60 * 60 * 1000);
         startDate.setHours(0, 0, 0, 0);
         endDate = new Date(now);
-        endDate.setTime(now.getTime() - 24 * 60 * 60 * 1000);
-        endDate.setHours(23, 59, 59, 999);
         break;
       }
       case "last72hours":
@@ -63,13 +59,14 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
         startDate = new Date(now);
         startDate.setDate(now.getDate() - 7);
         startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
+        endDate = new Date(now);
+
         break;
       case "last30days":
         startDate = new Date(now);
         startDate.setDate(now.getDate() - 30);
         startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
+
         break;
       case "last90days":
         startDate = new Date(now);
@@ -155,7 +152,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
             </SelectTrigger>
             <SelectContent position="popper">
               <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="last48hours">Last 48 Hours</SelectItem>
               <SelectItem value="last72hours">Last 72 Hours</SelectItem>
               <SelectItem value="last7days">Last 7 Days</SelectItem>
               <SelectItem value="last30days">Last 30 Days</SelectItem>

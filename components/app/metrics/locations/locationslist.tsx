@@ -1,13 +1,13 @@
 // Mapping of country names to country code
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const LocationsList = ({
   locations,
@@ -36,7 +36,15 @@ const LocationsList = ({
   }, [locations]);
 
   return (
-    <div style={{ overflow: "auto", width: "100%" }}>
+    <div
+      style={{
+        overflow: "auto",
+        width: "100%",
+        overflowY: "scroll",
+        maxHeight: "100%",
+        height: "100%",
+      }}
+    >
       {sortedLocations.length > 0 ? (
         sortedLocations.map((location) => {
           const uniqueKey = location; // Use location as the unique key
@@ -72,7 +80,10 @@ const LocationsList = ({
                 <Image
                   src={`/images/countries/${countryCode}.svg`}
                   alt={`${countryCode} flag`}
-                  width={20}
+                  width={25}
+                  style={{
+                    borderRadius: "4px",
+                  }}
                   height={20}
                 />
               )}

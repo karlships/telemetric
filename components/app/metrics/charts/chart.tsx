@@ -10,6 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { DataType } from "@/types/index";
 
 interface Activity {
@@ -27,15 +28,20 @@ interface ChartProps {
   dataType: DataType;
   startDate?: Date;
   endDate?: Date;
+  loading: boolean;
 }
 
 const Chart: React.FC<ChartProps> = ({
+  loading,
   activities,
   selectedTimeRange,
   dataType,
   startDate,
   endDate,
 }) => {
+  if (loading) {
+    return <Skeleton className="w-full" />;
+  }
   // Create default dates if not provided
   const effectiveStartDate = startDate || new Date(0);
   const effectiveEndDate = endDate || new Date();

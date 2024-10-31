@@ -584,6 +584,9 @@ function isBot(userAgent: string): boolean {
     "ZoomBot",
     "ZoominfoBot",
     "ZumBot",
+    "rv:93.0",
+    "vercel-screenshot/1.0",
+    "HeadlessChrome/130.0.0.0",
   ];
 
   const lowerUserAgent = userAgent.toLowerCase();
@@ -675,10 +678,14 @@ async function handleRequest(req: Request): Promise<Response> {
     // Extract User-Agent from request headers
 
     if (isBot(passed_request.user_agent)) {
-      return new Response("Bot defended", {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        "Telemetric detected a bot and did not continue. If you think this is an mistake, please contact support@untitledapps.at. The user agent blocked was: " +
+          passed_request.user_agent,
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
     const { req_os, browser, location } = await getRequestData(passed_request);
 

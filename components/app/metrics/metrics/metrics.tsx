@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import EventsCard from "../events/events";
 
 import { DataType } from "@/types/index";
+import BrowserCard from "../browsers/browsers";
 import LocationsCard from "../locations/locationscard";
 import Tabs from "../metricstabs/metricstab";
 import OperatingSystemCard from "../os/operatingsystems";
-import BrowserCard from "../browsers/browsers";
+import ReferrersCard from "../referrer/referrers";
 import VersionsCard from "../version/versions";
 import "./metrics.css";
-import Chart from "../charts/chart";
 
 interface MetricsProps {
   selectedProject: Project;
@@ -38,6 +38,8 @@ const Metrics: React.FC<MetricsProps> = ({
   const [eventsData, setEventsData] = useState<Event[]>([]);
   const [sessionsData, setSessionsData] = useState<Activity[]>([]);
   const [currentSelectTabIndex, setCurrentSelectTabIndex] = useState<number>(0);
+
+ 
 
   useEffect(() => {
     if (selectedProject) {
@@ -239,7 +241,6 @@ const Metrics: React.FC<MetricsProps> = ({
             selectedTimeRange={selectedTimeRange}
             startDate={startDate}
             endDate={endDate}
-  
           />
 
           {currentSelectTabIndex === 2 && (
@@ -263,6 +264,8 @@ const Metrics: React.FC<MetricsProps> = ({
 
           <div className="metrics-container-item-2">
             <VersionsCard versions={versionData} />
+
+            <ReferrersCard referrers={referrerData} />
           </div>
         </div>
       </div>

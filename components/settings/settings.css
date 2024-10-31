@@ -1,27 +1,24 @@
-.profile-container {
+.settings-container {
   display: flex;
-
   flex-direction: column;
   gap: 10px;
   width: 100%;
 }
 
-.profile-container-wrapper {
+.settings-container-wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   align-items: center;
   justify-content: center;
   padding: 10px;
   background-color: var(--dominant);
-
   align-self: center;
   justify-self: center;
   width: 80%;
 }
 
-.profile-container-wrapper-item {
+.settings-container-wrapper-item {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -31,7 +28,7 @@
 }
 
 @media (max-width: 600px) {
-  .profile-container-wrapper {
+  .settings-container-wrapper {
     width: 100%;
   }
 }

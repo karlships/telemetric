@@ -20,13 +20,13 @@
   padding-right: 10px;
 }
 
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 700px) {
   .timerange-selector {
     display: block;
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .navbar {
     width: 100%;
     max-width: 100%;

@@ -70,6 +70,7 @@ const Tabs: React.FC<TabsProps> = ({
       </div>
       <div className="tab-content">
         <Chart
+          loading={loading}
           activities={tabs[activeIndex].activities}
           selectedTimeRange={selectedTimeRange}
           dataType={tabs[activeIndex].dataType}

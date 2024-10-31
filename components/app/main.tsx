@@ -1,19 +1,16 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Project } from "@/types/index";
 
 import Metrics from "./metrics/metrics/metrics";
 
 import { createClient } from "@/utils/supabase/client";
-import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
-import { Navbar } from "./navigation/navbar/navbar";
 import { useSearchParams } from "next/navigation";
-import { UserProfile } from "./account/userprofile";
-import { ProjectSettings } from "./navigation/navbar/projectsettings";
 import { Profile } from "../profile/profile";
 import { Settings } from "../settings/settings";
-import { Telemetric } from "@offuntitledapps/telemetric";
+import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
+import { Navbar } from "./navigation/navbar/navbar";
 
 export function Dashboard() {
   const supabase = createClient();
@@ -26,8 +23,12 @@ export function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [timeRange, setTimeRange] = useState<string>("last7days");
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [startDate, setStartDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date;
+  });
+  const [endDate, setEndDate] = useState<Date>(() => new Date());
 
   const handleTimeRangeSelect = async (
     range: string,
@@ -35,14 +36,13 @@ export function Dashboard() {
     end?: Date
   ) => {
     setTimeRange(range);
-    setStartDate(start);
-    setEndDate(end);
+    setStartDate(start || new Date());
+    setEndDate(end || new Date());
   };
 
   const hasFetchedProjects = useRef(false);
 
   useEffect(() => {
-    Telemetric.revenue(100);
     setSelectedProject(projects[0]);
     const fetchProjects = async () => {
       if (hasFetchedProjects.current) return;
@@ -56,7 +56,7 @@ export function Dashboard() {
 
       if (storedProjects) {
         const parsedProjects = JSON.parse(storedProjects);
-        console.log(parsedProjects);
+
         for (const project of parsedProjects) {
           if (!projects.some((p) => p.id === project.id)) {
             fetchProjectData(project.id);
@@ -100,6 +100,10 @@ export function Dashboard() {
         .select("*")
         .eq("project_id", project);
 
+      const firstActivity = activitiesData && activitiesData[0];
+      const bundle_id = firstActivity?.bundle_id;
+      const url_running_on = firstActivity?.url_running_on;
+
       const { data: revenueData, error: revenueError } = await supabase
         .from("revenue")
         .select("*")
@@ -117,11 +121,23 @@ export function Dashboard() {
           activities: activitiesData || [],
           revenue: revenueData || [],
           events: eventsData || [],
+          bundle_id: bundle_id || "",
+          url_running_on: url_running_on?.includes("localhost")
+            ? ""
+            : url_running_on || "",
         };
 
         setProjects((prevProjects) => [...prevProjects, newProject]);
       }
     }
+  };
+
+  const updateProjectName = async (projectId: string | null, name: string) => {
+    setProjects((prevProjects) =>
+      prevProjects.map((project) =>
+        project.id === projectId ? { ...project, name } : project
+      )
+    );
   };
 
   const searchParams = useSearchParams();
@@ -131,6 +147,7 @@ export function Dashboard() {
   const handleProjectChange = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);
+    setSelectedContent("metrics");
   };
 
   if (error) return <div>Error: {error}</div>;
@@ -150,7 +167,12 @@ export function Dashboard() {
         </div>
       );
     } else if (selectedContent === "settings") {
-      return <Settings />;
+      return (
+        <Settings
+          selectedProject={selectedProject!}
+          updateProjectName={updateProjectName}
+        />
+      );
     } else if (selectedContent === "profile") {
       return <Profile />;
     }
