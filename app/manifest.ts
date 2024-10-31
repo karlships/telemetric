@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
         name: "Telemetric",
         short_name: "Telemetric",
         description:
-            "Privacy-focused analytics platform for your apps, web apps, and websites",
+            "Privacy-focused analytics platform for your apps, websites and web apps. Open source and built with You.",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
@@ -49,6 +49,18 @@ export default function manifest(): MetadataRoute.Manifest {
                 src: "/icons/manifest-icon-512.png",
                 sizes: "512x512",
                 type: "image/png",
+            },
+            {
+                src: "/icons/manifest-icon-192.maskable.png",
+                sizes: "192x192",
+                type: "image/png",
+                purpose: "maskable",
+            },
+            {
+                src: "/icons/manifest-icon-512.maskable.png",
+                sizes: "512x512",
+                type: "image/png",
+                purpose: "maskable",
             },
         ],
     };

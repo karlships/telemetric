@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Telemetric",
   description:
     "Privacy-focused analytics platform for your apps, websites and web apps. Open source and built with You.",
-  manifest: "/manifest.json",
+  manifest: "/manifest.ts",
   themeColor: "#000000",
   appleWebApp: {
     capable: true,
