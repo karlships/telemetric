@@ -39,8 +39,6 @@ const Metrics: React.FC<MetricsProps> = ({
   const [sessionsData, setSessionsData] = useState<Activity[]>([]);
   const [currentSelectTabIndex, setCurrentSelectTabIndex] = useState<number>(0);
 
- 
-
   useEffect(() => {
     if (selectedProject) {
       const uniqueUserSet = new Set();
@@ -192,25 +190,31 @@ const Metrics: React.FC<MetricsProps> = ({
       label: "Unique Visitors",
       activities: uniqueActivitiesArray,
       count: uniqueActivitiesArray.length.toString(),
-      dataType: DataType.USERS,
+      dataType: DataType.UNIQUE_VISITORS,
+      tooltip: "Unique visitors are users who have visited your site.",
     },
     {
       label: "Revenue",
       activities: revenueData,
       count: revenueTotal + "€",
       dataType: DataType.REVENUE,
+      tooltip: "Revenue is the total amount of money you've tracked.",
     },
     {
       label: "Events",
       activities: eventsData,
       count: eventsData.length.toString(),
       dataType: DataType.EVENTS,
+      tooltip:
+        "Events are actions tracked by Telemetric. For example, a user signing up or a user clicking a button.",
     },
     {
-      label: "Sessions",
+      label: "Visitors",
       activities: sessionsData,
       count: sessionsData.length.toString(),
-      dataType: DataType.SESSIONS,
+      dataType: DataType.VISITORS,
+      tooltip:
+        "Visitors are the total number of times users have visited your site.",
     },
   ];
 
@@ -267,6 +271,7 @@ const Metrics: React.FC<MetricsProps> = ({
 
             <ReferrersCard referrers={referrerData} />
           </div>
+          <div style={{ height: "100px" }}></div>
         </div>
       </div>
     </div>

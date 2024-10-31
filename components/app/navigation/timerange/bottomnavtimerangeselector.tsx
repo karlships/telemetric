@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import { addDays, format as dateFormat } from "date-fns";
 import React from "react";
@@ -123,7 +128,7 @@ const BottomNavTimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     <div className={cn("grid gap-2")}>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline">
+          <Button variant="outline" style={{ width: "100%", maxWidth: "100%" }}>
             Select Time Range {formatDateRange()}
           </Button>
         </DrawerTrigger>
@@ -167,6 +172,21 @@ const BottomNavTimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                   onChange={handleDateChange}
                   className="w-full p-2 border rounded"
                 />
+              </div>
+              <div className="flex gap-2 mt-4">
+                <DrawerClose asChild>
+                  <Button variant="outline" className="flex-1">
+                    Cancel
+                  </Button>
+                </DrawerClose>
+                <DrawerClose asChild>
+                  <Button
+                    onClick={() => setDateRange(dateRange)}
+                    className="flex-1"
+                  >
+                    Apply
+                  </Button>
+                </DrawerClose>
               </div>
             </div>
           </div>

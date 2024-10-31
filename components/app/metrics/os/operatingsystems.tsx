@@ -1,3 +1,4 @@
+import "@/components/app/metrics/shared/card.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -9,13 +10,16 @@ interface OSUsage {
 
 const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
   const [osUsage, setOsUsage] = useState<OSUsage[]>([]);
-
   useEffect(() => {
     const osCounts: { [key: string]: number } = {};
 
     activities.forEach((activity) => {
-      const os = activity; // Access the OS from activities
+      let os = activity; // Access the OS from activities
       if (os) {
+        // Convert Mac OS to macOS
+        if (os.toLowerCase().includes("mac os")) {
+          os = "macOS";
+        }
         osCounts[os] = (osCounts[os] || 0) + 1;
       }
     });
@@ -36,39 +40,11 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
   }, [activities]);
 
   return (
-    <div
-      style={{
-        border: "1px solid var(--outline)",
-        borderRadius: "10px",
-        overflow: "hidden",
-
-        display: "flex",
-        alignItems: "start",
-        width: "100%",
-        justifyContent: "start",
-        backgroundColor: "var(--on-dominant)",
-        flexDirection: "column",
-        gap: "0px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "space-between",
-          width: "100%",
-          maxHeight: "40px",
-          justifyContent: "space-between",
-        }}
-      >
-        <h4
-          style={{
-            color: "var(--secondary)",
-            padding: "10px",
-          }}
-        >
+    <div className="metrics-card">
+      <div className="metrics-card-header">
+        <h4 style={{ color: "var(--secondary)", padding: "10px" }}>
           Operating Systems
         </h4>
-
         <p
           style={{
             color: "var(--subtitle)",
@@ -79,14 +55,7 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
           Users & Percentage
         </p>
       </div>
-      <div
-        style={{
-          height: "1px",
-          width: "100%",
-          borderBottom: "1px solid var(--outline)",
-        }}
-      ></div>
-      <div style={{ width: "100%" }}>
+      <div className="metrics-card-content">
         {osUsage.length === 0 ? (
           <div
             style={{
@@ -117,38 +86,16 @@ const OperatingSystemCard = ({ activities }: { activities: string[] }) => {
               }}
             >
               <Image
-                src={`/images/os/${os.os
-                  .toLowerCase()
-                  .replace(/\s+/g, "")}.png`}
+                src={`/images/os/${os.os.toLowerCase()}.png`}
                 alt={`${os.os} logo`}
                 width={20}
                 height={20}
-                style={{
-                  filter: os.os.toLowerCase() === "ios" ? "invert(1)" : "none",
-                }}
               />
-
-              <p
-                style={{
-                  color: "var(--secondary)",
-                }}
-              >
-                {os.os === "ios"
-                  ? "iOS"
-                  : os.os.toLowerCase() === "mac os"
-                  ? "macOS"
-                  : os.os.charAt(0).toUpperCase() +
-                    os.os.slice(1).toLowerCase()}
+              <p style={{ color: "var(--secondary)" }}>
+                {os.os === "" ? "Unknown" : os.os}
               </p>
-              <p
-                style={{
-                  color: "var(--secondary)",
-
-                  marginLeft: "auto",
-                }}
-              >
-                {os.count} ({os.percentage}%){" "}
-                {/* Display count and percentage */}
+              <p style={{ color: "var(--secondary)", marginLeft: "auto" }}>
+                {os.count} ({os.percentage}%)
               </p>
             </div>
           ))

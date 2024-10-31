@@ -27,8 +27,10 @@ const LocationsTab: React.FC<TabsProps> = ({
     <div className="locations-tabs-container">
       <div className="locations-tabs">
         {tabs.map((tab, index) => (
-          <button
+          <div
             key={index}
+            role="button"
+            tabIndex={0}
             className={`locations-tab ${activeIndex === index ? "active" : ""}`}
             onClick={() => {
               handleTabClick(index);
@@ -36,9 +38,17 @@ const LocationsTab: React.FC<TabsProps> = ({
                 onSelectedTabChanged(index);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleTabClick(index);
+                if (onSelectedTabChanged) {
+                  onSelectedTabChanged(index);
+                }
+              }
+            }}
           >
             {tab.label}
-          </button>
+          </div>
         ))}
       </div>
       <div className="locations-tab-content">{tabs[activeIndex].content}</div>

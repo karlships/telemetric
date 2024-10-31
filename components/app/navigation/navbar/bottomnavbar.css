@@ -1,4 +1,4 @@
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .bottomnavbar {
     display: flex;
     position: fixed;
@@ -6,11 +6,11 @@
     left: 0;
     width: 100%;
     align-items: center;
+    border-top: 1px solid var(--outline);
     justify-content: center;
 
-    background-color: var(--dominant);
+    background-color: var(--on-dominant);
 
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     z-index: 10;
     padding-top: 10px;
     padding-left: 10px;

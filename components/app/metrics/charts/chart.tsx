@@ -162,10 +162,12 @@ const Chart: React.FC<ChartProps> = ({
                     {formattedDate} ({daysAgoText})
                   </p>
                   <p style={{ color: "var(--secondary)" }}>
-                    {dataType === DataType.USERS
-                      ? `Users: ${payload[0].value}`
+                    {dataType === DataType.UNIQUE_VISITORS
+                      ? `Unique Visitors: ${payload[0].value}`
                       : dataType === DataType.REVENUE
                       ? `Revenue: $${payload[0].value}`
+                      : dataType === DataType.VISITORS
+                      ? `Visitors: ${payload[0].value}`
                       : `Events: ${payload[0].value}`}
                   </p>
                 </div>

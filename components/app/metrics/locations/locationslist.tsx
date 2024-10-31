@@ -41,8 +41,11 @@ const LocationsList = ({
         overflow: "auto",
         width: "100%",
         overflowY: "scroll",
-        maxHeight: "100%",
-        height: "100%",
+        height: "calc(100%)",
+        maxHeight: "360px",
+        paddingRight: "8px",
+        scrollbarWidth: "thin",
+        scrollbarColor: "var(--secondary) transparent",
       }}
     >
       {sortedLocations.length > 0 ? (

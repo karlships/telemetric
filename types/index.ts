@@ -70,8 +70,8 @@ export enum SelectedNavItem {
 }
 
 export enum DataType {
-  USERS = "users",
+  UNIQUE_VISITORS = "uniqe_visitors",
   REVENUE = "revenue",
   EVENTS = "events",
-  SESSIONS = "sessions",
+  VISITORS = "visitors",
 }

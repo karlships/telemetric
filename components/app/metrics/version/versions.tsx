@@ -1,4 +1,5 @@
 import React from "react";
+import "../shared/card.css";
 
 interface VersionUsage {
   version: string;
@@ -37,37 +38,9 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
   }, [versions]);
 
   return (
-    <div
-      style={{
-        border: "1px solid var(--outline)",
-        borderRadius: "10px",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "start",
-        flex: 1,
-        justifyContent: "start",
-        backgroundColor: "var(--on-dominant)",
-        flexDirection: "column",
-        gap: "0px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "space-between",
-          width: "100%",
-          maxHeight: "40px",
-          justifyContent: "space-between",
-        }}
-      >
-        <h4
-          style={{
-            color: "var(--secondary)",
-            padding: "10px",
-          }}
-        >
-          Versions
-        </h4>
+    <div className="metrics-card">
+      <div className="metrics-card-header">
+        <h4 style={{ color: "var(--secondary)", padding: "10px" }}>Versions</h4>
         <p
           style={{
             color: "var(--subtitle)",
@@ -78,64 +51,58 @@ const VersionsCard = ({ versions }: { versions: string[] }) => {
           Users & Percentage
         </p>
       </div>
-      <div
-        style={{
-          height: "1px",
-          width: "100%",
-          borderBottom: "1px solid var(--outline)",
-        }}
-      ></div>
-      {versionUsage.length === 0 ? (
-        <div
-          style={{
-            color: "var(--subtitle)",
-            padding: "10px",
-            fontSize: "12px",
-            textAlign: "center",
-            width: "100%",
-          }}
-        >
-          No data. Yet.
-        </div>
-      ) : (
-        versionUsage.map((version) => (
+      <div className="metrics-card-content">
+        {versionUsage.length === 0 ? (
           <div
-            key={version.version} // Add the key prop here
             style={{
-              display: "flex",
-              alignItems: "center",
-              maxWidth: "100%",
-              minWidth: "100%",
-              background: `linear-gradient(to right, var(--dominant) ${version.percentage}%, transparent ${version.percentage}%)`,
-              gap: "10px",
-              marginBottom:
-                versionUsage.indexOf(version) === versionUsage.length - 1
-                  ? "0"
-                  : "4px",
+              color: "var(--subtitle)",
               padding: "10px",
-              borderRadius: "0px",
+              fontSize: "12px",
+              textAlign: "center",
+              width: "100%",
             }}
-       
           >
-            <p
-              style={{
-                color: "var(--secondary)",
-              }}
-            >
-              {version.version === "" ? "Unknown" : version.version}
-            </p>
-            <p
-              style={{
-                color: "var(--secondary)",
-                marginLeft: "auto",
-              }}
-            >
-              {version.count} ({version.percentage}%){" "}
-              {/* Display count and percentage */}
-            </p>
+            No data. Yet.
           </div>
-        ))
-      )}
+        ) : (
+          versionUsage.map((version) => (
+            <div
+              key={version.version} // Add the key prop here
+              style={{
+                display: "flex",
+                alignItems: "center",
+                maxWidth: "100%",
+                minWidth: "100%",
+                background: `linear-gradient(to right, var(--dominant) ${version.percentage}%, transparent ${version.percentage}%)`,
+                gap: "10px",
+                marginBottom:
+                  versionUsage.indexOf(version) === versionUsage.length - 1
+                    ? "0"
+                    : "4px",
+                padding: "10px",
+                borderRadius: "0px",
+              }}
+            >
+              <p
+                style={{
+                  color: "var(--secondary)",
+                }}
+              >
+                {version.version === "" ? "Unknown" : version.version}
+              </p>
+              <p
+                style={{
+                  color: "var(--secondary)",
+                  marginLeft: "auto",
+                }}
+              >
+                {version.count} ({version.percentage}%){" "}
+                {/* Display count and percentage */}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

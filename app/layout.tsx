@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import { TelemetricProviderClient } from "@/components/TelemetricProviderClient";
@@ -15,7 +15,8 @@ const supabase = createClient(
 );
 export const metadata: Metadata = {
   title: "Telemetric",
-  description: "Privacy-focused analytics platform",
+  description:
+    "Privacy-focused analytics platform for your apps, websites and web apps. Open source and built with You.",
   manifest: "/manifest.json",
   themeColor: "#000000",
   appleWebApp: {
@@ -26,11 +27,13 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -40,20 +43,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <meta name="application-name" content="Telemetric" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Telemetric" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#000000" />
-
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <link rel="manifest" href="/manifest.json" />
-      </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider attribute="class" enableSystem>
           <TelemetricProviderClient>{children}</TelemetricProviderClient>
         </ThemeProvider>
         <Toaster expand={true} />

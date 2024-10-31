@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import "../shared/card.css";
 
 interface ReferrerUsage {
   referrer: string;
@@ -38,56 +39,22 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
   }, [referrers]);
 
   return (
-    <div
-      style={{
-        border: "1px solid var(--outline)",
-        borderRadius: "10px",
-        overflow: "hidden",
-        flex: 1,
-        display: "flex",
-        alignItems: "start",
-        width: "100%",
-        justifyContent: "start",
-        backgroundColor: "var(--on-dominant)",
-        flexDirection: "column",
-        gap: "0px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "space-between",
-          width: "100%",
-          maxHeight: "40px",
-          justifyContent: "space-between",
-        }}
-      >
-        <h4
-          style={{
-            color: "var(--secondary)",
-            padding: "10px",
-            fontSize: "12px",
-          }}
-        >
+    <div className="metrics-card">
+      <div className="metrics-card-header">
+        <h4 style={{ color: "var(--secondary)", padding: "10px" }}>
           Referrers
         </h4>
         <p
           style={{
             color: "var(--subtitle)",
             padding: "10px",
+            fontSize: "12px",
           }}
         >
           Users & Percentage
         </p>
       </div>
-      <div
-        style={{
-          height: "1px",
-          width: "100%",
-          borderBottom: "1px solid var(--outline)",
-        }}
-      ></div>
-      <div style={{ overflow: "auto", width: "100%" }}>
+      <div className="metrics-card-content">
         {referrerUsage.length === 0 ? (
           <div
             style={{
@@ -103,7 +70,6 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
           referrerUsage.map((referrer) => (
             <a
               key={referrer.referrer} // Add the key prop here
-             
               href={
                 referrer.referrer !== "Unknown"
                   ? `${referrer.referrer}`

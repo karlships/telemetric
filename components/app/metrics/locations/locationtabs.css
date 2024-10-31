@@ -3,7 +3,8 @@
   flex-direction: column;
   flex: 1;
   background-color: var(--on-dominant);
-  height: 500px;
+  height: 100%;
+  min-height: 0;
 }
 .locations-tabs-count {
   font-size: 30px;
@@ -29,9 +30,11 @@
   justify-content: start;
   padding: 8px;
   display: flex;
+  height: 100%;
   align-items: start;
   justify-content: start;
   flex-direction: column;
+  overflow: scroll;
   gap: 4px;
 
   font-weight: 500;
@@ -56,9 +59,10 @@
 }
 .locations-tab-content {
   padding: 0px;
-  overflow-y: scroll;
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  overflow-y: auto;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .locations-tab-content::-webkit-scrollbar {
