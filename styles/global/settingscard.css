@@ -80,6 +80,8 @@
   width: 100%;
   display: flex;
   padding: 10px;
+  align-items: center;
+  flex-direction: row;
   justify-content: flex-end;
   background-color: var(--element);
   border-top: 1px solid var(--outline);
@@ -88,5 +90,18 @@
 @media (max-width: 800px) {
   .settings-card-container {
     width: 100%;
+  }
+
+  .settings-card-item {
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+  }
+
+  .settings-card-action {
+    flex-direction: column;
+    align-items: end;
+    gap: 15px;
+    justify-content: center;
   }
 }

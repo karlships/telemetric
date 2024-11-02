@@ -83,7 +83,7 @@ const EventsCard = ({
           style={{
             color: "var(--subtitle)",
             padding: "10px",
-            fontSize: "12px",
+            fontSize: "12px"
           }}
         >
           Users & Percentage

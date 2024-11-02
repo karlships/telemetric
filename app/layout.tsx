@@ -2,13 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
-import { HelpButton } from "@/components/app/helpbutton";
-import { TelemetricProviderClient } from "@/components/TelemetricProviderClient";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
-import { UserProvider } from "@/components/providers/UserProvider";
 
+import { TelemetricProviderClient } from "@/components/TelemetricProviderClient";
+import { HelpButton } from "@/components/app/helpbutton";
+import { UserProvider } from "@/components/providers/UserProvider";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 const supabase = createClient(
@@ -40,9 +40,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>

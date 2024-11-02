@@ -7,7 +7,7 @@
     width: 100%;
     align-items: center;
     border-top: 1px solid var(--outline);
-    justify-content: center;
+    justify-content: start;
 
     background-color: var(--on-dominant);
 

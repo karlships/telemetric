@@ -1,9 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+import Input from "@/components/ui/input/input";
+
 export default async function HomePage() {
   const supabase = createClient();
-
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {
@@ -11,50 +13,42 @@ export default async function HomePage() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        padding: "20px",
-        backgroundColor: "var(--dominant)",
-      }}
-    >
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      ></header>
+    <div className="flex flex-col min-h-screen p-5 bg-[var(--dominant)]">
+      <header className="flex justify-between items-center mb-5">
+        {/* Add header content */}
+      </header>
+
       <main
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}
+        className="flex-1 flex flex-col gap-5"
+        style={{ alignItems: "center", justifyContent: "center" }}
       >
         <section
+          className="bg-[var(--accent)] p-5 rounded-lg"
           style={{
-            backgroundColor: "var(--accent)",
-            padding: "20px",
-            borderRadius: "8px",
+            maxWidth: "300px",
+            gap: "10px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <h2 style={{ color: "var(--text)" }}>Quick Overview</h2>
-          {/* Add quick stats or summary here */}
-        </section>
-        <section
-          style={{
-            backgroundColor: "var(--accent)",
-            padding: "20px",
-            borderRadius: "8px",
-          }}
-        >
-          <h2 style={{ color: "var(--text)" }}>Recent Activity</h2>
-          {/* Add recent activity list here */}
+          <h2 className="text-[var(--text)] text-xl font-semibold ">
+            Join the Waitlist
+          </h2>
+          <p>
+            Telemetric is currently in private access. Join the waitlist and you
+            will be personally onboarded. Telemetric is free to use while in
+            private access.
+          </p>
+          <form className="flex flex-col gap-3">
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+
+            <Button type="submit">Join Waitlist</Button>
+          </form>
         </section>
       </main>
     </div>

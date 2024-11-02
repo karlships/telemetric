@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+
 import { CodeBlock } from "@/components/ui/code-block";
 import {
   Command,
@@ -143,7 +144,7 @@ Telemetric.init('${selectedProject.id}', '1.0.0', false);
           subtitle: "Get started with " + selectedProject.name,
         }}
         action={
-          <div className="flex gap-2">
+          <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost">Problems? Get help</Button>
@@ -180,7 +181,7 @@ Telemetric.init('${selectedProject.id}', '1.0.0', false);
             >
               Your SDK is missing?
             </Button>
-          </div>
+          </>
         }
       >
         <SettingsItem>
@@ -292,7 +293,10 @@ Telemetric.init('${selectedProject.id}', '1.0.0', false);
 
         {getCodeSnippet(selectedFramework) && (
           <SettingsItem>
-            <div className="flex flex-col gap-2">
+            <div
+              className="flex flex-col gap-2"
+              style={{ maxWidth: "600px", width: "100%" }}
+            >
               <p>2. Add to your app</p>
               <CodeBlock language="typescript">
                 {String(getCodeSnippet(selectedFramework))}

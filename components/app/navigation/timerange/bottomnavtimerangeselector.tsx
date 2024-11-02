@@ -128,9 +128,21 @@ const BottomNavTimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     <div className={cn("grid gap-2")}>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline" style={{ width: "100%", maxWidth: "100%" }}>
-            Select Time Range {formatDateRange()}
-          </Button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "start",
+            }}
+          >
+            <Button
+              variant="outline"
+              style={{ width: "100%", maxWidth: "100%", }}
+            >
+              Select Time Range {formatDateRange()}
+            </Button>
+          </div>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto w-full  p-4 space-y-4">

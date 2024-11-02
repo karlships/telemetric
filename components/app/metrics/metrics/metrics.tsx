@@ -239,12 +239,8 @@ const Metrics: React.FC<MetricsProps> = ({
 
   if (loading) {
     return (
-      <div className="metrics-container-wrapper">
-        <div className="metrics-container">
-          <div className="metrics-container-item">
-            <Skeleton className="w-full h-10" />
-          </div>
-        </div>
+      <div style={{ height: "100%" }}>
+        <Skeleton className="w-full h-full" />
       </div>
     );
   }
