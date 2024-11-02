@@ -246,6 +246,15 @@ export function Dashboard() {
 
   const showHomePage = searchParams.get("showHomePage");
 
+  const projectDeleted = searchParams.get("projectDeleted") === "true";
+  const projectDeleteName = searchParams.get("projectDeleteName");
+
+  useEffect(() => {
+    if (projectDeleted && projectDeleteName) {
+      toast.success(`Project "${projectDeleteName}" deleted successfully`);
+    }
+  }, [projectDeleted, projectDeleteName]);
+
   const handleProjectChange = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);

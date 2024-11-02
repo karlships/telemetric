@@ -53,7 +53,12 @@ export const Settings: React.FC<SettingsProps> = ({
         action={
           <Button
             variant="destructive"
-            onClick={() => handleDeleteProject(selectedProject?.id || null)}
+            onClick={() =>
+              handleDeleteProject(
+                selectedProject?.id || null,
+                selectedProject?.name || ""
+              )
+            }
           >
             Delete Project
           </Button>
@@ -68,7 +73,10 @@ export const Settings: React.FC<SettingsProps> = ({
   );
 };
 
-const handleDeleteProject = async (projectId: string | null) => {
+const handleDeleteProject = async (
+  projectId: string | null,
+  projectName: string
+) => {
   if (!projectId) {
     toast.error("No project selected");
     return;
@@ -126,7 +134,8 @@ const handleDeleteProject = async (projectId: string | null) => {
     }
 
     toast.success("Project and all related data deleted successfully");
-    window.location.href = "/";
+    window.location.href =
+      "/?projectDeleted=true&projectDeleteName=" + projectName;
   } catch (err) {
     console.error("Unexpected error:", err);
     toast.error("An unexpected error occurred while deleting the project");
