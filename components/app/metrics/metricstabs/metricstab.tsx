@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { DataType } from "@/types/index";
 import Chart from "../charts/chart";
 import "./metricstab.css";
@@ -57,12 +51,8 @@ const Tabs: React.FC<TabsProps> = ({
               }
             }}
           >
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>{tab.label}</TooltipTrigger>
-                <TooltipContent>{tab.tooltip}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            {tab.label}
+
             {loading ? (
               <div className="flex items-center space-x-4">
                 <Skeleton className="h-10 w-20 " />

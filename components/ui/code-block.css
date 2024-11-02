@@ -1,0 +1,62 @@
+.code-block {
+  position: relative;
+  border-radius: 6px;
+  background-color: var(--dominant);
+  width: 100%;
+  max-width: 800px;
+  min-width: 300px;
+  border: 1px solid var(--outline);
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px;
+  border-bottom: 1px solid var(--outline);
+}
+
+.language-label {
+  font-size: 14px;
+  color: var(--secondary);
+}
+
+.copy-button {
+  font-size: 10px;
+
+  color: var(--secondary);
+}
+
+.copy-button:hover {
+  color: var(--secondary);
+  opacity: 0.8;
+}
+
+.icon {
+  height: 16px;
+  width: 16px;
+}
+
+.code-pre {
+  padding: 8px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: "Fira Code", "Consolas", monospace;
+}
+
+.code-pre code {
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .code-pre {
+    font-size: 12px;
+  }
+
+  .code-block {
+    max-width: 100%;
+  }
+}

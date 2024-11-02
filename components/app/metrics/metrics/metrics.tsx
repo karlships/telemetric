@@ -9,6 +9,9 @@ import LocationsCard from "../locations/locationscard";
 import Tabs from "../metricstabs/metricstab";
 import OperatingSystemCard from "../os/operatingsystems";
 import ReferrersCard from "../referrer/referrers";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { Setup } from "../../setup/setup";
 import VersionsCard from "../version/versions";
 import "./metrics.css";
 
@@ -234,6 +237,28 @@ const Metrics: React.FC<MetricsProps> = ({
     (activity) => activity.referrer
   );
 
+  if (loading) {
+    return (
+      <div className="metrics-container-wrapper">
+        <div className="metrics-container">
+          <div className="metrics-container-item">
+            <Skeleton className="w-full h-10" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!loading) {
+    const hasNoData =
+      selectedProject.activities.length === 0 &&
+      selectedProject.revenue.length === 0 &&
+      selectedProject.events.length === 0;
+
+    if (hasNoData) {
+      return <Setup selectedProject={selectedProject} />;
+    }
+  }
   return (
     <div className="flex justify-center items-center">
       <div className="metrics-container-wrapper">

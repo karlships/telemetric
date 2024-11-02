@@ -22,6 +22,7 @@ body {
     --outline: #e1e1e1;
     --unselected: #8e8e8e;
     --outline-hover: #c9c9c9;
+    --element: #f9f9f9;
 
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -55,7 +56,7 @@ body {
     --dominant: #000000;
     --secondary: #f4f4f4;
     --on-dominant: #0a0a0a;
-
+    --element: #212121;
     --outline: #212121;
     --unselected: #707070;
     --outline-hover: #4d4d4d;

@@ -18,11 +18,14 @@ interface ProjectSelectProps {
   projects: Project[];
   loading: boolean;
   selectedProject: Project;
+
+  setSelectedContent: (value: string) => void;
   onProjectChange: (value: string) => void;
 }
 
 const ProjectSelect: React.FC<ProjectSelectProps> = ({
   projects,
+  setSelectedContent,
   loading,
   selectedProject,
   onProjectChange,
@@ -64,7 +67,13 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
 
   return (
     <Select
-      onValueChange={onProjectChange}
+      onValueChange={(value) => {
+        if (value !== "create-new-project") {
+          onProjectChange(value);
+        } else {
+          setSelectedContent("newProject");
+        }
+      }}
       value={
         !loading && selectedProject && selectedProject.id !== undefined
           ? selectedProject.id
@@ -123,7 +132,7 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
             </SelectItem>
           ))}
           <SelectSeparator />
-          <SelectItem value="create-new">
+          <SelectItem value="create-new-project">
             <div
               style={{
                 display: "flex",

@@ -12,7 +12,7 @@ export function ProjectSettings({
 
   return (
     <Button variant="outline" onClick={() => setSelectedContent("settings")}>
-      Settings
+      Project Settings
     </Button>
   );
 }

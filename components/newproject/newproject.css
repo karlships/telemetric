@@ -1,11 +1,11 @@
-.settings-container {
+.new-project-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
 }
 
-.settings-container-wrapper {
+.new-project-container-wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -18,7 +18,7 @@
   width: 80%;
 }
 
-.settings-container-wrapper-item {
+.new-project-container-wrapper-item {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -28,7 +28,7 @@
 }
 
 @media (max-width: 800px) {
-  .settings-container-wrapper {
+  .new-project-container-wrapper {
     width: 100%;
   }
 }

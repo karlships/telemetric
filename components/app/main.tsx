@@ -7,6 +7,8 @@ import Metrics from "./metrics/metrics/metrics";
 
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { NewProject } from "../newproject/newproject";
 import { Profile } from "../profile/profile";
 import { Settings } from "../settings/settings";
 import { BottomNavbar } from "./navigation/navbar/bottomnavbar";
@@ -21,7 +23,7 @@ export function Dashboard() {
 
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<string>("last7days");
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date();
@@ -44,6 +46,11 @@ export function Dashboard() {
 
   useEffect(() => {
     setSelectedProject(projects[0]);
+    if (selectedProject) {
+      setSelectedContent("metrics");
+      setLoading(false);
+    }
+
     const fetchProjects = async () => {
       if (hasFetchedProjects.current) return;
       hasFetchedProjects.current = true;
@@ -52,37 +59,22 @@ export function Dashboard() {
         await supabase.auth.getUser();
 
       // Check if projects exist in local storage
-      const storedProjects = localStorage.getItem("projects");
 
-      if (storedProjects) {
-        const parsedProjects = JSON.parse(storedProjects);
+      const { data, error } = await supabase
+        .from("customers")
+        .select("projects")
+        .eq("id", userData?.user?.id)
+        .single();
+      if (error) {
+        setError(error.message);
+        return;
+      }
 
-        for (const project of parsedProjects) {
-          if (!projects.some((p) => p.id === project.id)) {
-            fetchProjectData(project.id);
-          }
+      // Store projects in local storage
+      for (const project of data?.projects) {
+        if (!projects.some((p) => p.id === project)) {
+          fetchProjectData(project);
         }
-        setLoading(false);
-      } else {
-        const { data, error } = await supabase
-          .from("customers")
-          .select("projects")
-          .eq("id", userData?.user?.id)
-          .single();
-        if (error) {
-          setError(error.message);
-          setLoading(false);
-          return;
-        }
-
-        // Store projects in local storage
-        localStorage.setItem("projects", JSON.stringify(data?.projects));
-        for (const project of data?.projects) {
-          if (!projects.some((p) => p.id === project)) {
-            fetchProjectData(project);
-          }
-        }
-        setLoading(false);
       }
     };
 
@@ -108,6 +100,14 @@ export function Dashboard() {
         .from("revenue")
         .select("*")
         .eq("project_id", project);
+
+      // Convert revenue amounts from cents to dollars/euros
+      if (revenueData) {
+        revenueData.forEach((revenue) => {
+          revenue.total = revenue.total / 100;
+        });
+      }
+
       const { data: eventsData, error: eventsError } = await supabase
         .from("events")
         .select("*")
@@ -128,6 +128,7 @@ export function Dashboard() {
         };
 
         setProjects((prevProjects) => [...prevProjects, newProject]);
+        console.log("newProject", newProject);
       }
     }
   };
@@ -137,6 +138,107 @@ export function Dashboard() {
       prevProjects.map((project) =>
         project.id === projectId ? { ...project, name } : project
       )
+    );
+    if (!projectId) {
+      toast.error("No project selected");
+      return;
+    }
+
+    const supabase = createClient();
+    toast.promise(
+      async () => {
+        const { data, error } = await supabase
+          .from("projects")
+          .update({ name })
+          .eq("id", projectId)
+          .single();
+
+        if (error) throw error;
+        return data;
+      },
+      {
+        loading: "Updating project name...",
+        success: () => "Project name updated successfully",
+        error: (err) => `Failed to update project name: ${err.message}`,
+      }
+    );
+  };
+
+  const createProject = async (projectName: string) => {
+    if (!projectName) {
+      toast.error("Project name is required");
+      return;
+    }
+
+    const supabase = createClient();
+    const { data: userData } = await supabase.auth.getUser();
+
+    if (!userData?.user?.id) {
+      toast.error("You must be logged in to create a project");
+      return;
+    }
+
+    toast.promise(
+      async () => {
+        // Create the project
+        const { data: projectData, error: projectError } = await supabase
+          .from("projects")
+          .insert([
+            {
+              name: projectName,
+            },
+          ])
+          .select()
+          .single();
+
+        if (projectError) throw projectError;
+
+        // Add the new project to state
+        const newProject = {
+          ...projectData,
+          activities: [],
+          revenue: [],
+          events: [],
+          bundle_id: "",
+          url_running_on: "",
+        };
+
+        setProjects((prev) => [...prev, newProject]);
+        setSelectedProject(newProject);
+        setSelectedContent("metrics");
+
+        // First fetch current user's projects
+        const { data: existingUser, error: fetchError } = await supabase
+          .from("customers")
+          .select("projects")
+          .eq("id", userData.user.id)
+          .single();
+
+        if (fetchError) throw fetchError;
+
+        // Append new project to existing projects array
+        const updatedProjects = [
+          ...(existingUser?.projects || []),
+          newProject.id,
+        ];
+
+        // Update user with combined projects array
+        const { data: customerData, error: userError } = await supabase
+          .from("customers")
+          .update({ projects: updatedProjects })
+          .eq("id", userData.user.id)
+          .select()
+          .single();
+
+        if (userError) throw userError;
+
+        return projectData;
+      },
+      {
+        loading: "Creating project...",
+        success: "Project created successfully",
+        error: (err) => `Failed to create project: ${err.message}`,
+      }
     );
   };
 
@@ -175,6 +277,8 @@ export function Dashboard() {
       );
     } else if (selectedContent === "profile") {
       return <Profile />;
+    } else if (selectedContent === "newProject") {
+      return <NewProject createProject={createProject} />;
     }
   };
 

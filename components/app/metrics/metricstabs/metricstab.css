@@ -77,7 +77,7 @@
   ); /* Use your dominant background color variable */
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .tabs-container {
     flex-direction: column;
   }

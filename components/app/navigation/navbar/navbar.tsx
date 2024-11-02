@@ -1,7 +1,7 @@
 import { Project } from "@/types";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { UserProfile } from "../../account/userprofile";
+import { UserProfile } from "../profile_avatar";
 import ProjectSelect from "../projectselect";
 import TimeRangeSelector from "../timerange/timerangeselector";
 import "./navbar.css";
@@ -47,6 +47,8 @@ export function Navbar({
         selectedProject={selectedProject!}
         onProjectChange={onProjectChange}
         loading={loading}
+
+        setSelectedContent={setSelectedContent}
       />
       <div className="timerange-selector">
         <TimeRangeSelector

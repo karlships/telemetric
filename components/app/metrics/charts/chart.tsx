@@ -42,9 +42,14 @@ const Chart: React.FC<ChartProps> = ({
   if (loading) {
     return <Skeleton className="w-full" />;
   }
-  // Create default dates if not provided
+
+  // Create default dates and ensure endDate is current day (not future)
   const effectiveStartDate = startDate || new Date(0);
-  const effectiveEndDate = endDate || new Date();
+  const today = new Date();
+  today.setHours(23, 59, 59, 999); // Set to end of current day
+  const effectiveEndDate = endDate
+    ? new Date(Math.min(endDate.getTime(), today.getTime()))
+    : today;
 
   // Filter activities using the effective dates
   const filteredActivities = activities.filter((activity) => {
@@ -81,9 +86,13 @@ const Chart: React.FC<ChartProps> = ({
       (effectiveEndDate.getTime() - effectiveStartDate.getTime()) /
         (1000 * 60 * 60 * 24)
     ) + 1; // Include end date
+
   for (let i = 0; i < totalDays; i++) {
     const date = new Date(effectiveStartDate);
     date.setDate(effectiveStartDate.getDate() + i);
+    // Ensure we don't add future dates
+    if (date > today) continue;
+
     const dateString = date.toISOString().split("T")[0];
     const usersCount =
       aggregatedData.find((item) => item.name === dateString)?.users || 0;
