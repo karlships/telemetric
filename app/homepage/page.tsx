@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import Footer from "@/components/footer/footer";
 import { Button } from "@/components/ui/button";
 import Input from "@/components/ui/input/input";
+import { handleWaitlistSubmission } from "./actions";
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -46,6 +47,7 @@ export default async function HomePage() {
               display: "flex",
               flexDirection: "row",
             }}
+            action={handleWaitlistSubmission}
           >
             <Input
               type="email"
