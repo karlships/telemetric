@@ -45,7 +45,6 @@ const Metrics: React.FC<MetricsProps> = ({
   useEffect(() => {
     if (selectedProject) {
       const uniqueUserSet = new Set();
-      console.log("selectedProject", selectedProject);
 
       // Filter activities
       const filteredActivities = selectedProject.activities.filter(

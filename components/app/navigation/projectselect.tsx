@@ -118,7 +118,7 @@ const ProjectSelect: React.FC<ProjectSelectProps> = ({
                 }}
               >
                 <Image
-                  src={appIcons[project.id] || ""}
+                  src={appIcons[project.id] || "/icon.png"}
                   width={15}
                   height={15}
                   style={{

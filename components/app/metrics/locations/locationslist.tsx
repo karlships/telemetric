@@ -84,9 +84,7 @@ const LocationsList = ({
                   src={`/images/countries/${countryCode}.svg`}
                   alt={`${countryCode} flag`}
                   width={25}
-                  style={{
-                    borderRadius: "4px",
-                  }}
+                  style={{ height: "auto" }} // or width: 'auto'
                   height={20}
                 />
               )}

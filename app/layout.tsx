@@ -1,10 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 
 import "./globals.css";
 
-import { TelemetricProviderClient } from "@/components/TelemetricProviderClient";
 import { HelpButton } from "@/components/app/helpbutton";
 import { UserProvider } from "@/components/providers/UserProvider";
 import { ThemeProvider } from "next-themes";
@@ -45,10 +45,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://telemetric.app/t.js"
+          strategy="beforeInteractive"
+        />
+        <Script id="telemetric-init" strategy="beforeInteractive">
+          {`
+            window.addEventListener('load', async function() {
+              await Telemetric.init('364b0efc-6a84-43a6-ae52-39b2cde18139', '1.0.0', true);
+            });
+          `}
+        </Script>
+      </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" enableSystem>
           <UserProvider>
-            <TelemetricProviderClient>{children}</TelemetricProviderClient>
+            {children}
             <HelpButton />
           </UserProvider>
         </ThemeProvider>

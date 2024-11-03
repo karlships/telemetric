@@ -13,7 +13,11 @@ const withPWA = require("next-pwa")({
 const nextConfig = {
   // ...
   images: {
-    domains: ["www.google.com", "is1-ssl.mzstatic.com"],
+    domains: [
+      "www.google.com",
+      "is1-ssl.mzstatic.com",
+      "framerusercontent.com",
+    ],
   },
   // ...
 };

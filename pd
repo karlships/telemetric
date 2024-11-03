@@ -1,3 +1,3 @@
 #!/bin/bash
-cd integrations/flutter
+cd packages/flutter
 flutter pub publish

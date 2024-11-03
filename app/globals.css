@@ -12,10 +12,16 @@ body {
   }
 }
 
+h2 {
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
 @layer base {
   :root {
     --accent: #0057ff;
-    --subtitle: #666666;
+    --subtitle: #212020;
     --dominant: #fafafa;
     --on-dominant: #ffffff;
     --secondary: #171717;
@@ -30,7 +36,7 @@ body {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --primary: 224 100% 50%;
     --primary-foreground: 0 0% 98%;
 
     --secondary-foreground: 0 0% 9%;

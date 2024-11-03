@@ -128,7 +128,7 @@ export function Dashboard() {
         };
 
         setProjects((prevProjects) => [...prevProjects, newProject]);
-        console.log("newProject", newProject);
+        
       }
     }
   };
@@ -259,6 +259,7 @@ export function Dashboard() {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);
     setSelectedContent("metrics");
+    Telemetric.revenue(10);
   };
 
   if (error) return <div>Error: {error}</div>;

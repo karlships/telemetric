@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 
+import Footer from "@/components/footer/footer";
 import { Button } from "@/components/ui/button";
 import Input from "@/components/ui/input/input";
 
@@ -20,32 +21,56 @@ export default async function HomePage() {
         <section
           className="bg-[var(--accent)] p-5 rounded-lg"
           style={{
-            maxWidth: "300px",
+            maxWidth: "600px",
             gap: "10px",
             display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             flexDirection: "column",
           }}
         >
-          <h2 className="text-[var(--text)] text-xl font-semibold ">
-            Join the Waitlist
+          <h2 className=" text-center">
+            Privacy focused Analytics for your websites, apps and more
           </h2>
-          <p>
+          <p style={{ color: "var(--subtitle)", textAlign: "center" }}>
             Telemetric is currently in private access. Join the waitlist and you
             will be personally onboarded. Telemetric is free to use while in
             private access.
           </p>
-          <form className="flex flex-col gap-3">
+
+          <form
+            style={{
+              maxWidth: "350px",
+              alignItems: "center",
+              gap: "10px",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
             <Input
               type="email"
               name="email"
               placeholder="Enter your email"
+              style={{ width: "100%" }}
               required
             />
 
-            <Button type="submit">Join Waitlist</Button>
+            <Button style={{ width: "120px" }} type="submit">
+              I want access
+            </Button>
           </form>
         </section>
+        <img
+          src="https://framerusercontent.com/images/Jkuy3aB4Ufb8v4xqufBCEZCqN2w.png?scale-down-to=2048"
+          alt="Analytics"
+          style={{
+            width: "100%",
+            height: "auto",
+            clipPath: "inset(0 60px 20px 60px)",
+          }}
+        />
       </main>
+      <Footer />
     </div>
   );
 }

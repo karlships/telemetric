@@ -1,3 +1,4 @@
+import { QuestionMarkIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import React from "react";
 import "../shared/card.css";
@@ -105,12 +106,18 @@ const ReferrersCard = ({ referrers }: { referrers: string[] }) => {
                   borderRadius: "0px",
                 }}
               >
-                <Image
-                  src={`https://www.google.com/s2/favicons?domain=${referrer.referrer}&sz=256`}
-                  alt={`${referrer.referrer} favicon`}
-                  width={20}
-                  height={20}
-                />
+                {referrer.referrer === "null" ||
+                referrer.referrer === "Unknown" ? (
+                  <QuestionMarkIcon color="var(--secondary)" />
+                ) : (
+                  <Image
+                    src={`https://www.google.com/s2/favicons?domain=${referrer.referrer}&sz=256`}
+                    alt={`${referrer.referrer} favicon`}
+                    width={20}
+                    height={20}
+                  />
+                )}
+
                 <p
                   style={{
                     color: "var(--secondary)",

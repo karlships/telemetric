@@ -25,119 +25,25 @@ import { cn } from "@/lib/utils";
 import { Project } from "@/types";
 import { Check, ChevronsUpDown } from "lucide-react";
 import React, { useState } from "react";
+import {
+  frameworks,
+  getCodeSnippet,
+  getFinishSteps,
+  getInstallSnippet,
+  getTrackingSnippet,
+  getVerificationSteps,
+} from "./setup-instructions";
 
 interface SetupProps {
   selectedProject: Project;
 }
 
-const frameworks = [
-  {
-    label: "Flutter",
-    value: "flutter",
-    logo: "images/frameworks/flutter.png",
-  },
-  {
-    label: "Framer",
-    value: "framer",
-    logo: "images/frameworks/framer.png",
-  },
-  {
-    label: "Webflow",
-    value: "webflow",
-    logo: "images/frameworks/webflow.png",
-  },
-  {
-    label: "HTML/JavaScript",
-    value: "vanilla",
-    logo: "images/frameworks/javascript.png",
-  },
-];
-
 export const Setup: React.FC<SetupProps> = ({ selectedProject }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedFramework, setSelectedFramework] = useState("flutter");
 
-  const getCodeSnippet = (framework: string) => {
-    switch (framework) {
-      case "flutter":
-        return `import 'package:telemetric/telemetric.dart';
-
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Always await the init call
- await Telemetric.init('${selectedProject.id}');
-}
-
-// Track events
-Telemetric.event('event_name');
-
-// Track revenue
-Telemetric.revenue(1.99);`;
-      case "react":
-        return `import { Telemetric } from '@telemetric/react'
-
-function App() {
   return (
-    <Telemetric projectId="${selectedProject.id}">
-      <YourApp />
-    </Telemetric>
-  )
-}`;
-
-      // Add other frameworks...
-    }
-  };
-
-  const getInstallSnippet = (framework: string) => {
-    switch (framework) {
-      case "flutter":
-        return `flutter pub add telemetric`;
-      case "framer":
-        return `<script src="https://hkromzwdaxhcragbcnmw.supabase.co/storage/v1/object/public/cdn/telemetric.bundle.js"></script>
-<script>
-// Initialize when page loads
-window.addEventListener('load', async function() {
-    // Initialize with your project ID
-    await Telemetric.init('${selectedProject.id}', '1.0.0', false);
-});
-</script>
-`;
-      case "webflow":
-        return `<script src="https://hkromzwdaxhcragbcnmw.supabase.co/storage/v1/object/public/cdn/telemetric.bundle.js"></script>
-<script>
-// Initialize with your project ID
-Telemetric.init('${selectedProject.id}', '1.0.0', false);
-</script>
-`;
-      case "vanilla":
-        return `<script src="https://hkromzwdaxhcragbcnmw.supabase.co/storage/v1/object/public/cdn/telemetric.bundle.js"></script>
-<script>
-// Initialize with your project ID
-Telemetric.init('${selectedProject.id}', '1.0.0', false);
-</script>`;
-      default:
-        return "";
-    }
-  };
-
-  const getVerificationSteps = (framework: string) => {
-    switch (framework) {
-      case "flutter":
-        return `3. By default, Telemetric won't send any data in debug mode.
-        To test Telemetric is working, call Telemetric.init() with trackInDebug: true.
-        Then hot restart your app, reload this page.
-        If it's working this screen will gone and instead you'll see the analytics dashboard.`;
-      case "framer":
-      case "webflow":
-      case "vanilla":
-        return "2. Verify the integration by opening your browser's Developer Console (F12) and checking for a message confirming the connection to Telemetric.";
-      default:
-        return "";
-    }
-  };
-
-  return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2  mx-auto">
       <SettingsCard
         header={{
           title: "Project Setup",
@@ -184,136 +90,176 @@ Telemetric.init('${selectedProject.id}', '1.0.0', false);
           </>
         }
       >
-        <SettingsItem>
-          <p>Select your framework</p>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-[200px] justify-between"
-              >
-                {selectedFramework ? (
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={
-                        frameworks.find((f) => f.value === selectedFramework)
-                          ?.logo
-                      }
-                      alt=""
-                      className="w-4 h-4"
-                    />
-                    {
-                      frameworks.find((f) => f.value === selectedFramework)
-                        ?.label
-                    }
-                  </div>
-                ) : (
-                  "Select framework..."
-                )}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search framework..." />
-                <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
-                  <CommandGroup>
-                    {frameworks.map((framework) => (
-                      <CommandItem
-                        key={framework.value}
-                        value={framework.value}
-                        onSelect={(currentValue) => {
-                          setSelectedFramework(currentValue);
-                          setOpen(false);
-                        }}
-                      >
-                        <div className="flex items-center gap-2">
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedFramework === framework.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          <img
-                            src={framework.logo}
-                            alt=""
-                            className="w-4 h-4"
-                          />
-                          {framework.label}
-                        </div>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </SettingsItem>
-
-        {getInstallSnippet(selectedFramework) && (
-          <SettingsItem>
-            <div
-              className="flex flex-col gap-2"
-              style={{ maxWidth: "600px", width: "100%" }}
-            >
-              <p
-                style={{
-                  whiteSpace: "pre-line",
-                  maxWidth: "600px",
-                }}
-              >
-                {selectedFramework === "framer"
-                  ? 'Open your framer project settings, select "General" and then scroll down to find the Custom Code section. \nCopy and paste the following code to the Start of Head Tag property. Then press "Save", and then "Publish".'
-                  : selectedFramework === "webflow"
-                  ? "Open your Webflow project settings, and then on the left sidebar select Custom Code. \nCopy and paste the following code to the Start of Head Tag property. Then press Save, and then Publish."
-                  : selectedFramework === "vanilla"
-                  ? "Copy and paste the following code to the Start of Head Tag property of your website."
-                  : "1. Install the package"}
-              </p>
-              <CodeBlock
-                language={
-                  selectedFramework === "flutter"
-                    ? "bash"
-                    : selectedFramework === "framer" ||
-                      selectedFramework === "webflow"
-                    ? "html"
-                    : "bash"
-                }
-              >
-                {getInstallSnippet(selectedFramework)}
-              </CodeBlock>
-            </div>
-          </SettingsItem>
-        )}
-
-        {getCodeSnippet(selectedFramework) && (
-          <SettingsItem>
-            <div
-              className="flex flex-col gap-2"
-              style={{ maxWidth: "600px", width: "100%" }}
-            >
-              <p>2. Add to your app</p>
-              <CodeBlock language="typescript">
-                {String(getCodeSnippet(selectedFramework))}
-              </CodeBlock>
-            </div>
-          </SettingsItem>
-        )}
-
-        {getVerificationSteps(selectedFramework) && (
+        <div className="max-w-[600px]">
           <SettingsItem>
             <div className="flex flex-col gap-2">
-              <p>{getVerificationSteps(selectedFramework)}</p>
+              <p>
+                To add Telemetric to your app, website or webapp, follow the
+                instructions below. If your framework is not listed, please tell
+                me and I will add it within 24 hours. Click on the button at the
+                bottom right if you need help.
+              </p>
+              <p>1. Select your framework</p>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                  >
+                    {selectedFramework ? (
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={
+                            frameworks.find(
+                              (f) => f.value === selectedFramework
+                            )?.logo
+                          }
+                          alt=""
+                          className="w-4 h-4"
+                        />
+                        {
+                          frameworks.find((f) => f.value === selectedFramework)
+                            ?.label
+                        }
+                      </div>
+                    ) : (
+                      "Select framework..."
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search framework..." />
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {frameworks.map((framework) => (
+                          <CommandItem
+                            key={framework.value}
+                            value={framework.value}
+                            onSelect={(currentValue) => {
+                              setSelectedFramework(currentValue);
+                              setOpen(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedFramework === framework.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              <img
+                                src={framework.logo}
+                                alt=""
+                                className="w-4 h-4"
+                              />
+                              {framework.label}
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
           </SettingsItem>
-        )}
+
+          {Boolean(
+            getInstallSnippet(selectedProject.id, selectedFramework)
+          ) && (
+            <SettingsItem>
+              <div className="flex flex-col gap-2 w-full">
+                <p className="whitespace-pre-line">
+                  {
+                    getInstallSnippet(selectedProject.id, selectedFramework)
+                      ?.description
+                  }
+                </p>
+                <CodeBlock
+                  language={
+                    getInstallSnippet(selectedProject.id, selectedFramework)
+                      ?.language || "bash"
+                  }
+                >
+                  {getInstallSnippet(selectedProject.id, selectedFramework)
+                    ?.code || ""}
+                </CodeBlock>
+              </div>
+            </SettingsItem>
+          )}
+
+          {Boolean(getCodeSnippet(selectedProject.id, selectedFramework)) && (
+            <SettingsItem>
+              <div className="flex flex-col gap-2 w-full">
+                <p>
+                  {
+                    getCodeSnippet(selectedProject.id, selectedFramework)
+                      ?.description
+                  }
+                </p>
+                <CodeBlock
+                  language={
+                    getCodeSnippet(selectedProject.id, selectedFramework)
+                      ?.language || "javascript"
+                  }
+                >
+                  {getCodeSnippet(selectedProject.id, selectedFramework)
+                    ?.code || ""}
+                </CodeBlock>
+              </div>
+            </SettingsItem>
+          )}
+
+          {Boolean(getVerificationSteps(selectedFramework)) && (
+            <SettingsItem>
+              <div className="flex flex-col gap-2 w-full">
+                <p>{String(getVerificationSteps(selectedFramework))}</p>
+              </div>
+            </SettingsItem>
+          )}
+
+          {Boolean(
+            getTrackingSnippet(selectedProject.id, selectedFramework)
+          ) && (
+            <SettingsItem>
+              <div className="flex flex-col gap-2 w-full">
+                <p>
+                  {
+                    getTrackingSnippet(selectedProject.id, selectedFramework)
+                      ?.description
+                  }
+                </p>
+                <CodeBlock
+                  language={
+                    getTrackingSnippet(selectedProject.id, selectedFramework)
+                      ?.language || "javascript"
+                  }
+                >
+                  {getTrackingSnippet(selectedProject.id, selectedFramework)
+                    ?.code || ""}
+                </CodeBlock>
+              </div>
+            </SettingsItem>
+          )}
+
+          {Boolean(getFinishSteps(selectedFramework)) && (
+            <SettingsItem>
+              <div className="flex flex-col gap-2">
+                <p className="font-medium">🎉 You're all set!</p>
+                <p>{getFinishSteps(selectedFramework)}</p>
+              </div>
+            </SettingsItem>
+          )}
+        </div>
       </SettingsCard>
-      <div style={{ height: "100px" }}></div>
+      <div className="h-[100px]"></div>
     </div>
   );
 };

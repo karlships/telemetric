@@ -591,7 +591,7 @@ function isBot(userAgent: string): boolean {
 
   const lowerUserAgent = userAgent.toLowerCase();
 
-  return botKeywords.some((keyword) => lowerUserAgent.includes(keyword));
+  return botKeywords.some((keyword) => lowerUserAgent.includes(keyword.toLowerCase()));
 }
 
 async function getRequestData(
