@@ -15,7 +15,8 @@ const BrowsersCard = ({ activities }: { activities: string[] }) => {
     const browserCounts: { [key: string]: number } = {};
 
     activities.forEach((activity) => {
-      const browser = activity; // Access the browser from activities
+      let browser = activity; // Access the browser from activities
+
       if (browser) {
         browserCounts[browser] = (browserCounts[browser] || 0) + 1;
       }
@@ -85,7 +86,9 @@ const BrowsersCard = ({ activities }: { activities: string[] }) => {
               }}
             >
               <Image
-                src={`/images/browsers/${browser.browser.toLowerCase()}.png`}
+                src={`/images/browsers/${browser.browser
+                  .toLowerCase()
+                  .replace(" ", "")}.png`}
                 alt={`${browser.browser} logo`}
                 width={20}
                 height={20}
