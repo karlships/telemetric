@@ -33,12 +33,13 @@ async function getLocation(ip: string): Promise<LocationData> {
 
 // Function to get OS from User-Agent
 function getOSFromUserAgent(userAgent: string): string {
+  if (userAgent.includes("iPhone") || userAgent.includes("iPad")) return "iOS";
   if (userAgent.includes("Windows")) return "Windows";
   if (userAgent.includes("Mac OS")) return "Mac OS";
   if (userAgent.includes("X11")) return "UNIX";
   if (userAgent.includes("Linux")) return "Linux";
   if (userAgent.includes("Android")) return "Android";
-  if (userAgent.includes("iPhone") || userAgent.includes("iPad")) return "iOS";
+
   return "";
 }
 
@@ -591,7 +592,9 @@ function isBot(userAgent: string): boolean {
 
   const lowerUserAgent = userAgent.toLowerCase();
 
-  return botKeywords.some((keyword) => lowerUserAgent.includes(keyword.toLowerCase()));
+  return botKeywords.some((keyword) =>
+    lowerUserAgent.includes(keyword.toLowerCase())
+  );
 }
 
 async function getRequestData(
