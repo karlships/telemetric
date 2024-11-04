@@ -1,6 +1,5 @@
 import { logout } from "@/app/auth/actions";
 import { useUser } from "@/components/providers/UserProvider";
-import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import { LogOutIcon, Trash2Icon } from "lucide-react";
 import { Button } from "../ui/button";
 import { SettingsCard, SettingsItem } from "../ui/settings-card";
@@ -16,28 +15,6 @@ export const Profile: React.FC = () => {
         subtitle: user?.user_metadata?.name,
       }}
     >
-      <SettingsItem>
-        <p>Github Repo - Contribute</p>
-        <Button
-          variant="outline"
-          onClick={() =>
-            window.open("https://github.com/untitledapps/telemetric", "_blank")
-          }
-        >
-          <GitHubLogoIcon />
-          Github Repo
-        </Button>
-      </SettingsItem>
-      <SettingsItem>
-        <p>Follow the Creator on X</p>
-        <Button
-          variant="outline"
-          onClick={() => window.open("https://x.com/CarlosDev33", "_blank")}
-        >
-          <TwitterLogoIcon />
-          Follow Creator
-        </Button>
-      </SettingsItem>
       <SettingsItem>
         <p>Sign out</p>
         <Button variant="outline" onClick={() => logout()}>

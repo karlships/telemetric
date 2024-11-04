@@ -108,3 +108,16 @@ p {
   font-weight: 400;
   margin: 0;
 }
+
+.dark-mode-img {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .light-mode-img {
+    display: none;
+  }
+  .dark-mode-img {
+    display: block;
+  }
+}

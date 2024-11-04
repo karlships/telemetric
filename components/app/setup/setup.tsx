@@ -68,16 +68,6 @@ export const Setup: React.FC<SetupProps> = ({ selectedProject }) => {
                 >
                   Send an email
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() =>
-                    window.open(
-                      "https://github.com/untitledapps/telemetric/issues",
-                      "_blank"
-                    )
-                  }
-                >
-                  GitHub Issue
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

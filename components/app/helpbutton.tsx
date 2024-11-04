@@ -35,20 +35,8 @@ export function HelpButton() {
           >
             Email Support
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => window.open("https://x.com/carlosships", "_blank")}
-          >
-            DM me on X
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              window.open(
-                "https://github.com/untitledapps/telemetric",
-                "_blank"
-              )
-            }
-          >
-            GitHub Issues
+          <DropdownMenuItem onClick={() => window.open("", "_blank")}>
+            ss
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

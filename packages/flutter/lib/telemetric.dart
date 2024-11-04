@@ -48,14 +48,14 @@ class Telemetric {
 
     await _initializeUserID();
     const url = 'https://hkromzwdaxhcragbcnmw.supabase.co/functions/v1/init';
-    String? bundle_id;
-    String? url_running_on;
+    String? bundleId;
+    String? urlRunningOn;
     if (!kIsWeb) {
       final packageInfo = await PackageInfo.fromPlatform();
 
-      bundle_id = packageInfo.packageName;
+      bundleId = packageInfo.packageName;
     } else {
-      url_running_on = getWebURLRunningOn();
+      urlRunningOn = getWebURLRunningOn();
     }
 
     try {
@@ -67,8 +67,8 @@ class Telemetric {
           'project_id': _project_id,
           "version": _version,
           "os": getOS(),
-          "url_running_on": url_running_on,
-          "bundle_id": bundle_id,
+          "url_running_on": urlRunningOn,
+          "bundle_id": bundleId,
           "referrer": _referrer,
           "user_id": _user_id,
         }),
