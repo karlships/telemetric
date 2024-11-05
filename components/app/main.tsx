@@ -97,7 +97,7 @@ export function Dashboard() {
         .select("*")
         .eq("project_id", project);
 
-      if (activitiesData && activitiesData.length === 0) {
+      if (activitiesData && activitiesData.length === 0 && projectData) {
         const newProject = {
           ...projectData![0],
           activities: [],
@@ -107,6 +107,7 @@ export function Dashboard() {
           url_running_on: "",
         };
 
+        setProjects((prevProjects) => [...prevProjects, newProject]);
         return;
       }
 

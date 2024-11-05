@@ -122,10 +122,46 @@ const handleDeleteProject = async (
     }
 
     // Finally delete the project
-    const { error: projectError } = await supabase
+    const { error: projectError, data: projectData } = await supabase
       .from("projects")
       .delete()
       .eq("id", projectId);
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    // Get the user's current projects array
+    const { data: userData, error: userDataError } = await supabase
+      .from("customers")
+      .select("projects")
+      .eq("id", user?.id)
+      .single();
+
+    if (userDataError) {
+      console.error("Error getting user projects:", userDataError);
+      toast.error("Failed to get user's projects");
+      return;
+    }
+
+    const currentProjects = userData?.projects || [];
+    // Remove the project ID from the array
+    const updatedProjects = currentProjects.filter(
+      (id: string) => id !== projectId
+    );
+
+    // Delete the project from the user's projects array
+    const { error: userProjectError } = await supabase
+      .from("customers")
+      .update({ projects: updatedProjects })
+      .eq("id", user?.id);
+
+    if (userProjectError) {
+      console.error("Error deleting user project:", userProjectError);
+      toast.error("Failed to remove project from user's projects");
+      return;
+    }
 
     if (projectError) {
       console.error("Error deleting project:", projectError);
