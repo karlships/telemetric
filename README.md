@@ -1,1 +1,3 @@
-Telemetric is an analytics tool with support for Flutter and the Web.
+Head over to https://telemetric.app to get started!
+
+Feature Requests in issues please.
