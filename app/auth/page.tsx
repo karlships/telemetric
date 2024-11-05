@@ -41,7 +41,7 @@ const LoginPage = () => {
         data: { session },
       } = await supabase.auth.getSession();
       if (session) {
-        router.push("/");
+        // router.push("/");
       }
     };
 
@@ -68,7 +68,8 @@ const LoginPage = () => {
                 textAlign: "start",
               }}
             >
-              Welcome! Continue to Telemetric by signing in with Google.
+              Welcome! Continue to Telemetric by signing in with your Google or
+              Github account.
             </p>
           </div>
 
@@ -83,6 +84,18 @@ const LoginPage = () => {
             }}
           >
             Continue with Google
+          </Button>
+          <Button
+            onClick={() => {
+              supabase.auth.signInWithOAuth({
+                provider: "github",
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                },
+              });
+            }}
+          >
+            Continue with Github
           </Button>
 
           {message && <Message message={message.message} type={message.type} />}

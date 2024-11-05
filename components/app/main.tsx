@@ -70,6 +70,11 @@ export function Dashboard() {
         return;
       }
 
+      if (data?.projects.length === 0) {
+        setSelectedContent("newProject");
+        return;
+      }
+
       // Store projects in local storage
       for (const project of data?.projects) {
         if (!projects.some((p) => p.id === project)) {
@@ -91,6 +96,19 @@ export function Dashboard() {
         .from("activities")
         .select("*")
         .eq("project_id", project);
+
+      if (activitiesData && activitiesData.length === 0) {
+        const newProject = {
+          ...projectData![0],
+          activities: [],
+          revenue: [],
+          events: [],
+          bundle_id: "",
+          url_running_on: "",
+        };
+
+        return;
+      }
 
       const firstActivity = activitiesData && activitiesData[0];
       const bundle_id = firstActivity?.bundle_id;
@@ -128,7 +146,6 @@ export function Dashboard() {
         };
 
         setProjects((prevProjects) => [...prevProjects, newProject]);
-        
       }
     }
   };
@@ -204,9 +221,6 @@ export function Dashboard() {
         };
 
         setProjects((prev) => [...prev, newProject]);
-        setSelectedProject(newProject);
-        setSelectedContent("metrics");
-
         // First fetch current user's projects
         const { data: existingUser, error: fetchError } = await supabase
           .from("customers")
@@ -215,13 +229,11 @@ export function Dashboard() {
           .single();
 
         if (fetchError) throw fetchError;
-
         // Append new project to existing projects array
         const updatedProjects = [
           ...(existingUser?.projects || []),
           newProject.id,
         ];
-
         // Update user with combined projects array
         const { data: customerData, error: userError } = await supabase
           .from("customers")
@@ -231,7 +243,8 @@ export function Dashboard() {
           .single();
 
         if (userError) throw userError;
-
+        setSelectedProject(newProject);
+        setSelectedContent("metrics");
         return projectData;
       },
       {
@@ -259,7 +272,6 @@ export function Dashboard() {
     const project = projects.find((p) => p.id === projectId) || null;
     setSelectedProject(project);
     setSelectedContent("metrics");
-    Telemetric.revenue(10);
   };
 
   if (error) return <div>Error: {error}</div>;
@@ -293,6 +305,20 @@ export function Dashboard() {
   };
 
   // Dependency array to trigger effect when projects change
+  if (loading)
+    return (
+      <div
+        style={{
+          height: "100vh",
+          width: "100vw",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Fetching your projects...
+      </div>
+    );
 
   return showHomePage ? (
     <div>Home Page</div>

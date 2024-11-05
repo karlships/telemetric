@@ -64,16 +64,26 @@ export const Setup: React.FC<SetupProps> = ({ selectedProject }) => {
                   DM me on X
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => window.open("mailto:support@untitledapps.at")}
+                  onClick={() =>
+                    window.open(
+                      "https://github.com/karlships/telemetric/issues",
+                      "_blank"
+                    )
+                  }
                 >
-                  Send an email
+                  Github Issue
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             <Button
               variant="outline"
-              onClick={() => window.open("/missing-sdk", "_blank")}
+              onClick={() =>
+                window.open(
+                  "https://github.com/karlships/telemetric/wiki/Missing-SDK",
+                  "_blank"
+                )
+              }
             >
               Your SDK is missing?
             </Button>

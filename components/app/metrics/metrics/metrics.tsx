@@ -58,6 +58,8 @@ const Metrics: React.FC<MetricsProps> = ({
         }
       );
 
+      
+
       // Get unique activities
       const uniqueActivities = filteredActivities.filter((activity) => {
         if (!uniqueUserSet.has(activity.user_id)) {

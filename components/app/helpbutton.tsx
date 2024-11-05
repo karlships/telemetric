@@ -26,17 +26,26 @@ export function HelpButton() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="top">
           <DropdownMenuItem
-            onClick={() => window.open("https://telemetric.app/docs", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://github.com/karlships/telemetric/wiki",
+                "_blank"
+              )
+            }
           >
             Documentation
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => window.open("mailto:support@untitledapps.at")}
+            onClick={() => window.open("https://x.com/karlships", "_blank")}
           >
-            Email Support
+            DM on X
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => window.open("", "_blank")}>
-            ss
+          <DropdownMenuItem
+            onClick={() =>
+              window.open("https://github.com/karlships/telemetric", "_blank")
+            }
+          >
+            Github Issues
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
