@@ -62,26 +62,17 @@ export default async function HomePage() {
             </Button>
           </form>
         </section>
-        <img
-          src="https://framerusercontent.com/images/Jkuy3aB4Ufb8v4xqufBCEZCqN2w.png?scale-down-to=2048"
-          alt="Analytics"
-          className="light-mode-img"
-          style={{
-            width: "100%",
-            height: "auto",
-            clipPath: "inset(0 60px 20px 60px)",
-          }}
-        />
-        <img
-          src="https://framerusercontent.com/images/HoOSZNPGZsNP3aNxODRBIC7CxTM.png"
-          alt="Analytics Dark Mode"
-          className="dark-mode-img"
-          style={{
-            width: "100%",
-            height: "auto",
-            clipPath: "inset(0 60px 20px 60px)",
-          }}
-        />
+        <video
+          className="rounded-lg mt-5"
+          style={{ maxWidth: "800px", width: "100%" }}
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src="/videos/demo.mov" type="video/quicktime" />
+          Your browser does not support the video tag.
+        </video>
       </main>
       <Footer />
     </div>
